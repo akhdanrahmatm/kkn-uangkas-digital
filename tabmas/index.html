@@ -68,14 +68,19 @@
             document.body.appendChild(script);
         }
 
-        function renderData(data) {
-            document.getElementById("balance-idr").innerText = "Rp " + data.totalBalanceIDR.toLocaleString("id-ID");
-            const container = document.getElementById("user-list");
-            container.innerHTML = "";
-            data.users.forEach(user => {
-                container.innerHTML += `<div class="glass-card rounded-[25px] p-4 flex justify-between items-center"><h4 class="font-semibold">${user.name}</h4><h4 class="font-bold text-gold">${user.gram} gr</h4></div>`;
-            });
-        }
+       function renderData(data) {
+    // Menampilkan Total Gram saja karena harga real-time sudah dihapus
+    document.getElementById("balance-idr").innerText = data.totalGram + " gr";
+    const container = document.getElementById("user-list");
+    container.innerHTML = "";
+    data.users.forEach(user => {
+        container.innerHTML += `
+        <div class="glass-card rounded-[25px] p-4 flex justify-between items-center">
+            <h4 class="font-semibold">${user.name}</h4>
+            <h4 class="font-bold text-gold">${user.gram} gr</h4>
+        </div>`;
+    });
+}
 
         function openModal() { document.getElementById('modalTambah').classList.remove('hidden'); }
         function closeModal() { document.getElementById('modalTambah').classList.add('hidden'); }
