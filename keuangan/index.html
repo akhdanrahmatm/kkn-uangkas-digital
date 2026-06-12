@@ -1,575 +1,1089 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Keuangan Terpadu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --bg-primary: #f8fafc;
-            --sidebar-bg: #0f172a;
-            --sidebar-text: #94a3b8;
-            --sidebar-active: #38bdf8;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --pemasukan: #10b981;
-            --pengeluaran: #ef4444;
-            --border-color: #e2e8f0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: row;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- SIDEBAR STYLING (DESKTOP DEFAULT) --- */
-        .sidebar {
-            width: 260px;
-            background-color: var(--sidebar-bg);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            flex-shrink: 0;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 40px;
-        }
-
-        .brand i {
-            color: var(--sidebar-active);
-        }
-
-        .menu-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            color: var(--sidebar-text);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--sidebar-active);
-        }
-
-        /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            padding: 40px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .header h1 {
-            font-size: 26px;
-            font-weight: 700;
-        }
-
-        /* --- DASHBOARD CARDS --- */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .card-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .card-value {
-            font-size: 26px;
-            font-weight: 700;
-            word-break: break-all;
-        }
-
-        /* --- LAYOUT GRID: FORM & TABLE --- */
-        .content-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1.8fr;
-            gap: 32px;
-            align-items: start;
-        }
-
-        /* --- FORM ELEMENTS --- */
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-main);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            background-color: #f8fafc;
-            border-radius: 8px;
-            outline: none;
-            font-size: 14px;
-            transition: all 0.3s;
-            -webkit-appearance: none; /* Normalkan style iOS */
-        }
-
-        .form-control:focus {
-            border-color: var(--sidebar-active);
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--sidebar-bg);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #1e293b;
-        }
-
-        .btn:disabled {
-            background-color: var(--text-muted);
-            cursor: not-allowed;
-        }
-
-        /* --- TABLE STYLING --- */
-        .table-responsive {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            overflow-x: auto; /* Memungkinkan tabel di-swipe horizontal jika layar terlalu kecil */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            min-width: 500px; /* Menjaga teks tabel agar tidak berdesakan di layar kecil */
-        }
-
-        th {
-            background-color: #f8fafc;
-            padding: 16px 24px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        td {
-            padding: 16px 24px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .badge-pemasukan {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--pemasukan);
-        }
-
-        .badge-pengeluaran {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--pengeluaran);
-        }
-
-        /* ==========================================================================
-           RESPONSIVE MEDIA QUERIES (SISTEM DIUBAH MENJADI MOBILE FRIENDLY)
-           ========================================================================== */
-        
-        @media (max-width: 1024px) {
-            .content-wrapper {
-                grid-template-columns: 1fr; /* Form dan tabel bertumpuk vertikal */
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column; /* Mengubah susunan layout utama dari menyamping menjadi bertumpuk vertikal */
-                overflow: auto; /* Mengizinkan seluruh layar di-scroll ke bawah */
-                height: auto;
-            }
-
-            /* Mengubah Sidebar menjadi Top Navbar di HP */
-            .sidebar {
-                width: 100%;
-                height: auto;
-                padding: 16px 20px;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                position: sticky;
-                top: 0;
-                z-index: 999;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-
-            .brand {
-                margin-bottom: 0;
-                font-size: 18px;
-            }
-
-            .menu-list {
-                flex-direction: row; /* Navigasi menu berbaris menyamping */
-                gap: 4px;
-            }
-
-            .menu-item {
-                padding: 8px 12px;
-                font-size: 13px;
-                gap: 8px;
-            }
-
-            .menu-item span {
-                display: none; /* Sembunyikan teks menu (Dashboard, Transaksi) di HP untuk menghemat ruang, sisakan ikon saja jika layar sangat kecil */
-            }
-
-            /* Mengoptimalkan ruang padding konten utama di HP */
-            .main-content {
-                padding: 20px;
-                overflow-y: visible;
-            }
-
-            .header {
-                margin-bottom: 20px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            .summary-grid {
-                gap: 16px;
-                margin-bottom: 24px;
-                grid-template-columns: 1fr; /* Kartu-kartu saldo berbaris satu-satu kebawah */
-            }
-
-            .card {
-                padding: 18px;
-            }
-
-            .card-value {
-                font-size: 22px;
-            }
-        }
-
-        /* Penyesuaian khusus untuk layar HP yang sangat kecil */
-        @media (max-width: 480px) {
-            .menu-item span {
-                display: none; 
-            }
-            .sidebar {
-                padding: 12px 16px;
-            }
-            td, th {
-                padding: 12px 14px;
-                font-size: 13px;
-            }
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>KKN Finance - Batang Kabung Gantiang</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary-fixed-dim": "#ffb4a8",
+        "on-primary-fixed-variant": "#8f0f07",
+        "tertiary-fixed": "#c6e9e9",
+        "on-tertiary-fixed": "#002020",
+        "on-background": "#1c1b1b",
+        "surface-container-low": "#f6f3f2",
+        "outline-variant": "#e2bfb9",
+        "primary": "#570000",
+        "surface-container-lowest": "#ffffff",
+        "on-error": "#ffffff",
+        "error-container": "#ffdad6",
+        "on-secondary-fixed-variant": "#474836",
+        "on-surface-variant": "#5a413d",
+        "inverse-primary": "#ffb4a8",
+        "inverse-on-surface": "#f3f0ef",
+        "secondary": "#5e604d",
+        "on-tertiary-container": "#8caead",
+        "primary-container": "#800000",
+        "tertiary-fixed-dim": "#abcdcd",
+        "on-primary": "#ffffff",
+        "on-surface": "#1c1b1b",
+        "on-tertiary": "#ffffff",
+        "on-primary-container": "#ff8371",
+        "secondary-fixed-dim": "#c8c8b0",
+        "tertiary-container": "#224242",
+        "on-secondary-fixed": "#1b1d0e",
+        "on-primary-fixed": "#410000",
+        "surface-tint": "#b22b1d",
+        "error": "#ba1a1a",
+        "surface-container-highest": "#e5e2e1",
+        "tertiary": "#082c2c",
+        "secondary-fixed": "#e4e4cc",
+        "surface-container": "#f0eded",
+        "primary-fixed": "#ffdad4",
+        "inverse-surface": "#313030",
+        "background": "#fcf9f8",
+        "on-secondary-container": "#636451",
+        "surface-container-high": "#eae7e7",
+        "surface-variant": "#e5e2e1",
+        "surface": "#fcf9f8",
+        "surface-dim": "#dcd9d9",
+        "secondary-container": "#e1e1c9",
+        "outline": "#8e706c",
+        "surface-bright": "#fcf9f8",
+        "on-error-container": "#93000a",
+        "on-secondary": "#ffffff",
+        "on-tertiary-fixed-variant": "#2c4c4c"
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", "2xl": "1rem", full: "9999px"
+      },
+      spacing: {
+        gutter: "16px", lg: "24px", sm: "8px", md: "16px", base: "4px", xs: "4px", xl: "32px", "margin-mobile": "20px"
+      },
+      fontFamily: {
+        "headline-md": ["Hanken Grotesk","sans-serif"],
+        "headline-sm": ["Hanken Grotesk","sans-serif"],
+        "display-lg-mobile": ["Hanken Grotesk","sans-serif"],
+        "display-lg": ["Hanken Grotesk","sans-serif"],
+        "body-lg": ["Inter","sans-serif"],
+        "label-md": ["JetBrains Mono","monospace"],
+        "body-md": ["Inter","sans-serif"]
+      },
+      fontSize: {
+        "headline-md": ["24px",{lineHeight:"32px",fontWeight:"600"}],
+        "headline-sm": ["20px",{lineHeight:"28px",fontWeight:"600"}],
+        "display-lg-mobile": ["28px",{lineHeight:"36px",fontWeight:"700"}],
+        "display-lg": ["32px",{lineHeight:"40px",letterSpacing:"-0.02em",fontWeight:"700"}],
+        "body-lg": ["16px",{lineHeight:"24px",fontWeight:"400"}],
+        "label-md": ["12px",{lineHeight:"16px",letterSpacing:"0.05em",fontWeight:"500"}],
+        "body-md": ["14px",{lineHeight:"20px",fontWeight:"400"}]
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; min-height: 100dvh; overscroll-behavior: none; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .fill-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .page { display: none; }
+  .page.active { display: flex; flex-direction: column; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .glass-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(226,191,185,0.3); }
+  .bento-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .bento-item-large { grid-column: span 2; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #f0eded; }
+  ::-webkit-scrollbar-thumb { background: #e2bfb9; border-radius: 10px; }
+  input:focus, select:focus, textarea:focus { outline: none; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; justify-content: center; align-items: flex-end; }
+  .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease; }
+  .modal-content { background: #fff; border-radius: 1rem 1rem 0 0; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .auth-page { min-height: 100dvh; justify-content: center; align-items: center; }
+</style>
 </head>
-<body>
+<body class="font-body-md text-on-background antialiased">
 
-    <div class="sidebar">
-        <div class="brand">
-            <i class="fa-solid fa-vault"></i>
-            <span>FinAsisten</span>
-        </div>
-        <ul class="menu-list">
-            <li><a class="menu-item active"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a></li>
-            <li><a class="menu-item"><i class="fa-solid fa-wallet"></i> <span>Transaksi</span></a></li>
-            <li><a class="menu-item"><i class="fa-solid fa-gear"></i> <span>Pengaturan</span></a></li>
-        </ul>
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="page-login" class="page active auth-page">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]"></div>
+    <div class="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[100px]"></div>
+  </div>
+  <main class="relative z-10 w-full max-w-[440px] px-margin-mobile py-xl">
+    <div class="flex flex-col items-center mb-xl">
+      <div class="w-16 h-16 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 mb-md">
+        <span class="material-symbols-outlined text-on-primary text-[32px] fill-icon">account_balance_wallet</span>
+      </div>
+      <h1 class="font-display-lg-mobile text-display-lg-mobile text-on-background tracking-tight">KKN Finance</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">Sistem Pelaporan Keuangan Digital</p>
     </div>
-
-    <div class="main-content">
-        <div class="header">
-            <h1>Ringkasan Finansial</h1>
-            <span id="current-date" style="color: var(--text-muted); font-weight: 500; font-size: 14px;"></span>
+    <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-[0_20px_50px_rgba(87,0,0,0.08)] p-xl overflow-hidden relative">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+      <form onsubmit="handleLogin(event)" class="space-y-lg relative z-10">
+        <div class="space-y-sm">
+          <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="login-id">
+            <span class="material-symbols-outlined text-[18px]">person</span> EMAIL ATAU NIM
+          </label>
+          <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="login-id" placeholder="Masukkan NIM Anda" type="text" required=""/>
         </div>
-
-        <div class="summary-grid">
-            <div class="card">
-                <div class="card-header">
-                    <span>Total Saldo Neto</span>
-                    <div class="card-icon" style="background-color: rgba(56, 189, 248, 0.1); color: var(--sidebar-active);">
-                        <i class="fa-solid fa-scale-balanced"></i>
-                    </div>
-                </div>
-                <div class="card-value" id="total-saldo">Rp 0</div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <span>Total Pemasukan</span>
-                    <div class="card-icon" style="background-color: rgba(16, 185, 129, 0.1); color: var(--pemasukan);">
-                        <i class="fa-solid fa-arrow-up-long"></i>
-                    </div>
-                </div>
-                <div class="card-value" id="total-pemasukan" style="color: var(--pemasukan);">Rp 0</div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <span>Total Pengeluaran</span>
-                    <div class="card-icon" style="background-color: rgba(239, 68, 68, 0.1); color: var(--pengeluaran);">
-                        <i class="fa-solid fa-arrow-down-long"></i>
-                    </div>
-                </div>
-                <div class="card-value" id="total-pengeluaran" style="color: var(--pengeluaran);">Rp 0</div>
-            </div>
+        <div class="space-y-sm">
+          <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="login-password">
+            <span class="material-symbols-outlined text-[18px]">lock</span> KATA SANDI
+          </label>
+          <div class="relative">
+            <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="login-password" placeholder="••••••••" type="password" required=""/>
+            <button onclick="toggleFieldVisibility('login-password','login-pass-icon')" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[20px]" id="login-pass-icon">visibility</span>
+            </button>
+          </div>
         </div>
+        <div class="flex items-center justify-between">
+          <label class="flex items-center gap-2 cursor-pointer group">
+            <input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+            <span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Ingat saya</span>
+          </label>
+          <a class="font-body-md text-body-md text-primary font-semibold hover:underline decoration-primary/30 underline-offset-4" href="#">Lupa sandi?</a>
+        </div>
+        <button class="w-full h-14 bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm shadow-md shadow-primary/10 hover:shadow-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-3" type="submit">
+          Masuk Sekarang <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+        </button>
+      </form>
+    </div>
+    <div class="mt-lg text-center">
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Belum memiliki akun? <a class="text-primary font-bold hover:underline underline-offset-4" href="#" onclick="navigateToAuth('register')">Daftar Kelompok</a>
+      </p>
+    </div>
+    <div class="mt-xl grid grid-cols-1 gap-md">
+      <div class="bg-secondary-container/30 border border-secondary-container/50 p-md rounded-xl flex items-start gap-md">
+        <div class="bg-secondary-container p-2 rounded-lg">
+          <span class="material-symbols-outlined text-on-secondary-container text-[20px]">verified_user</span>
+        </div>
+        <div>
+          <h4 class="font-headline-sm text-[16px] text-on-secondary-container">Keamanan Terjamin</h4>
+          <p class="font-body-md text-[13px] text-on-secondary-container/80 leading-relaxed">Data pengeluaran KKN Anda dienkripsi dan sinkron dengan portal universitas.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="fixed bottom-gutter w-full text-center px-margin-mobile">
+    <p class="font-label-md text-label-md text-on-surface-variant/40 uppercase tracking-widest">&copy; 2024 LPPM - Pusat KKN Mahasiswa</p>
+  </footer>
+</div>
 
-        <div class="content-wrapper">
-            <div class="card">
-                <h3 style="margin-bottom: 20px; font-weight: 600; font-size: 18px;">Tambah Transaksi</h3>
-                <form id="financialForm">
-                    <div class="form-group">
-                        <label for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="jenis">Jenis Transaksi</label>
-                        <select id="jenis" class="form-control" required>
-                            <option value="Pemasukan">Pemasukan</option>
-                            <option value="Pengeluaran">Pengeluaran</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="kategori">Kategori</label>
-                        <select id="kategori" class="form-control" required>
-                            <option value="Gaji / Pendapatan">Gaji / Pendapatan</option>
-                            <option value="Makanan & Minuman">Makanan & Minuman</option>
-                            <option value="Kebutuhan Rumah Tangga">Kebutuhan Rumah Tangga</option>
-                            <option value="Transportasi / Bensin">Transportasi / Bensin</option>
-                            <option value="Investasi / Tabungan">Investasi / Tabungan</option>
-                            <option value="Hiburan / Jajan">Hiburan / Jajan</option>
-                            <option value="Lain-lain">Lain-lain</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="jumlah">Jumlah Nilai (Rp)</label>
-                        <input type="number" id="jumlah" class="form-control" placeholder="Masukan nominal tanpa titik/koma" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="catatan">Keterangan / Catatan</label>
-                        <input type="text" id="catatan" class="form-control" placeholder="Contoh: Beli token listrik bulanan">
-                    </div>
-                    <button type="submit" class="btn" id="submitBtn">Simpan Transaksi</button>
-                </form>
-            </div>
+<!-- ==================== REGISTER PAGE ==================== -->
+<div id="page-register" class="page auth-page">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]"></div>
+    <div class="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[100px]"></div>
+  </div>
+  <main class="relative z-10 w-full max-w-[440px] px-margin-mobile py-xl">
+    <div class="flex flex-col items-center mb-xl">
+      <div class="w-16 h-16 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 mb-md">
+        <span class="material-symbols-outlined text-on-primary text-[32px] fill-icon">person_add</span>
+      </div>
+      <h1 class="font-display-lg-mobile text-display-lg-mobile text-on-background tracking-tight">Daftar Akun</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">Kelola anggaran KKN Anda secara profesional.</p>
+    </div>
+    <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-[0_20px_50px_rgba(87,0,0,0.08)] p-xl overflow-hidden relative">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+      <form onsubmit="handleRegister(event)" class="space-y-lg relative z-10">
+        <!-- Nama Lengkap -->
+        <div class="space-y-sm">
+          <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="reg-nama">
+            <span class="material-symbols-outlined text-[18px]">person</span> NAMA LENGKAP
+          </label>
+          <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="reg-nama" placeholder="Contoh: Budi Raharjo" type="text" required=""/>
+        </div>
+        <!-- NIM / Email -->
+        <div class="space-y-sm">
+          <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="reg-id">
+            <span class="material-symbols-outlined text-[18px]">badge</span> NIM / EMAIL
+          </label>
+          <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="reg-id" placeholder="NIM atau Alamat Email" type="text" required=""/>
+        </div>
+        <!-- Kata Sandi -->
+        <div class="space-y-sm">
+          <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="reg-password">
+            <span class="material-symbols-outlined text-[18px]">lock</span> KATA SANDI
+          </label>
+          <div class="relative">
+            <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="reg-password" placeholder="Minimal 6 karakter" type="password" required=""/>
+            <button onclick="toggleFieldVisibility('reg-password','reg-pass-icon1')" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[20px]" id="reg-pass-icon1">visibility</span>
+            </button>
+          </div>
+        </div>
+        <!-- Konfirmasi Kata Sandi -->
+        <div class="space-y-sm">
+          <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="reg-confirm">
+            <span class="material-symbols-outlined text-[18px]">sync_lock</span> KONFIRMASI KATA SANDI
+          </label>
+          <div class="relative">
+            <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="reg-confirm" placeholder="Ketik ulang kata sandi" type="password" required=""/>
+            <button onclick="toggleFieldVisibility('reg-confirm','reg-pass-icon2')" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[20px]" id="reg-pass-icon2">visibility</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-error hidden mt-1" id="reg-mismatch">Kata sandi tidak cocok</p>
+        </div>
+        <button class="w-full h-14 bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm shadow-md shadow-primary/10 hover:shadow-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-3" type="submit">
+          Daftar Sekarang <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+        </button>
+      </form>
+    </div>
+    <div class="mt-lg text-center">
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Sudah punya akun? <a class="text-primary font-bold hover:underline underline-offset-4" href="#" onclick="navigateToAuth('login')">Masuk Sekarang</a>
+      </p>
+    </div>
+    <div class="mt-xl flex items-center justify-center gap-4">
+      <div class="h-px flex-1 bg-outline-variant/30"></div>
+      <span class="font-label-md text-label-md text-on-surface-variant/40 uppercase tracking-widest">Verified Secure</span>
+      <div class="h-px flex-1 bg-outline-variant/30"></div>
+    </div>
+  </main>
+  <footer class="fixed bottom-gutter w-full text-center px-margin-mobile">
+    <p class="font-label-md text-label-md text-on-surface-variant/40 uppercase tracking-widest">&copy; 2024 LPPM - Pusat KKN Mahasiswa</p>
+  </footer>
+</div>
 
+<!-- ==================== DASHBOARD PAGE ==================== -->
+<div id="page-dashboard" class="page pb-28">
+  <header class="w-full top-0 sticky z-40 bg-surface border-b border-outline-variant shadow-sm flex items-center justify-between px-margin-mobile h-16">
+    <div class="flex items-center gap-3">
+      <div class="bg-primary-container p-2 rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-on-primary-container fill-icon">account_balance_wallet</span>
+      </div>
+      <div>
+        <h1 class="font-headline-sm text-primary leading-tight">KKN BATANG KABUNG-GANTIANG</h1>
+      </div>
+    </div>
+    <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors active:opacity-80">
+      <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+    </button>
+  </header>
+  <main class="pt-6 px-margin-mobile max-w-2xl mx-auto">
+    <!-- Bento Summary -->
+    <section class="bento-grid mb-lg">
+      <div class="bento-item-large bg-primary p-6 rounded-xl shadow-[0_20px_40px_rgba(87,0,0,0.12)] relative overflow-hidden">
+        <div class="absolute -right-4 -top-4 opacity-10"><span class="material-symbols-outlined text-[120px]">account_balance_wallet</span></div>
+        <div class="relative z-10">
+          <p class="font-label-md text-label-md text-primary-fixed-dim mb-1">Total Saldo</p>
+          <h2 class="font-display-lg-mobile text-display-lg-mobile text-white mb-2">Rp 4.250.000</h2>
+          <div class="inline-flex items-center gap-1 px-2 py-1 bg-white/10 rounded-full text-[10px] text-white/80 font-medium">
+            <span class="material-symbols-outlined text-xs">trending_up</span> +12% Bulan ini
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-outline-variant shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-on-tertiary-fixed text-sm fill-icon">arrow_downward</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant">Pemasukan</p>
+        <p class="font-headline-sm text-headline-sm text-on-surface mt-1">Rp 6.100k</p>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-outline-variant shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-error-container flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-on-error-container text-sm fill-icon">arrow_upward</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant">Pengeluaran</p>
+        <p class="font-headline-sm text-headline-sm text-on-surface mt-1">Rp 1.850k</p>
+      </div>
+    </section>
+    <!-- Budget Progress -->
+    <section class="mb-lg">
+      <div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">Progres Anggaran KKN</h3>
+          <span class="font-label-md text-label-md text-primary">68%</span>
+        </div>
+        <div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+          <div class="h-full bg-primary transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(87,0,0,0.3)]" style="width:68%"></div>
+        </div>
+        <p class="mt-3 font-body-md text-on-surface-variant text-xs italic">Sisa anggaran untuk Program Kerja: Rp 1.350.000</p>
+      </div>
+    </section>
+    <!-- Recent Transactions -->
+    <section>
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Transaksi Terakhir</h3>
+        <button class="text-primary font-label-md text-label-md px-2 py-1 rounded-md hover:bg-primary/5 transition-colors">Lihat Semua</button>
+      </div>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-outline-variant active:scale-[0.98] transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-error-container/60 flex items-center justify-center"><span class="material-symbols-outlined text-on-error-container text-xl">restaurant</span></div>
+            <div><p class="font-body-md font-semibold text-on-surface">Konsumsi Rapat Desa</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">14 Okt &bull; Keluar</p></div>
+          </div>
+          <p class="font-label-md text-error font-bold">- Rp 150.000</p>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-outline-variant active:scale-[0.98] transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-tertiary-fixed/60 flex items-center justify-center"><span class="material-symbols-outlined text-on-tertiary-fixed text-xl">payments</span></div>
+            <div><p class="font-body-md font-semibold text-on-surface">Dana Hibah Universitas</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">12 Okt &bull; Masuk</p></div>
+          </div>
+          <p class="font-label-md text-tertiary-container font-bold">+ Rp 2.500.000</p>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-outline-variant active:scale-[0.98] transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-error-container/60 flex items-center justify-center"><span class="material-symbols-outlined text-on-error-container text-xl">hardware</span></div>
+            <div><p class="font-body-md font-semibold text-on-surface">Bahan Pembuatan Plang</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">11 Okt &bull; Keluar</p></div>
+          </div>
+          <p class="font-label-md text-error font-bold">- Rp 320.000</p>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-outline-variant active:scale-[0.98] transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-error-container/60 flex items-center justify-center"><span class="material-symbols-outlined text-on-error-container text-xl">local_gas_station</span></div>
+            <div><p class="font-body-md font-semibold text-on-surface">BBM Operasional Posko</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">10 Okt &bull; Keluar</p></div>
+          </div>
+          <p class="font-label-md text-error font-bold">- Rp 45.000</p>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-outline-variant active:scale-[0.98] transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-tertiary-fixed/60 flex items-center justify-center"><span class="material-symbols-outlined text-on-tertiary-fixed text-xl">volunteer_activism</span></div>
+            <div><p class="font-body-md font-semibold text-on-surface">Iuran Mahasiswa KKN</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">08 Okt &bull; Masuk</p></div>
+          </div>
+          <p class="font-label-md text-tertiary-container font-bold">+ Rp 1.200.000</p>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-outline-variant active:scale-[0.98] transition-transform">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-error-container/60 flex items-center justify-center"><span class="material-symbols-outlined text-on-error-container text-xl">print</span></div>
+            <div><p class="font-body-md font-semibold text-on-surface">Cetak Laporan Mingguan</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">07 Okt &bull; Keluar</p></div>
+          </div>
+          <p class="font-label-md text-error font-bold">- Rp 65.000</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <button onclick="showAddModal()" class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center z-40 active:scale-90 transition-transform">
+    <span class="material-symbols-outlined text-2xl">add</span>
+  </button>
+</div>
+
+<!-- ==================== PEMASUKAN PAGE ==================== -->
+<div id="page-pemasukan" class="page pb-28">
+  <header class="w-full top-0 sticky z-40 bg-surface border-b border-outline-variant shadow-sm flex items-center justify-between px-margin-mobile h-16">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-primary fill-icon">account_balance_wallet</span>
+      <h1 class="font-headline-sm text-primary leading-tight">KKN BATANG KABUNG-GANTIANG</h1>
+    </div>
+    <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors">
+      <span class="material-symbols-outlined text-on-surface-variant">search</span>
+    </button>
+  </header>
+  <main class="px-margin-mobile pt-6 max-w-4xl mx-auto">
+    <section class="mb-8">
+      <div class="flex justify-between items-end mb-4">
+        <div>
+          <p class="text-on-surface-variant font-label-md uppercase tracking-wider">Total Pemasukan</p>
+          <h2 class="text-primary font-display-lg-mobile mt-1">Rp 12.450.000</h2>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-on-secondary-fixed-variant bg-secondary-container px-3 py-1 rounded-full font-label-md">
+            <span class="material-symbols-outlined text-[16px]">trending_up</span> +12% bln ini
+          </span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="glass-card p-4 rounded-xl shadow-sm">
+          <p class="text-on-surface-variant text-label-md">Kontributor Terbanyak</p>
+          <p class="font-headline-sm text-primary mt-1">Sponsor A</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl shadow-sm">
+          <p class="text-on-surface-variant text-label-md">Jumlah Transaksi</p>
+          <p class="font-headline-sm text-primary mt-1">24 Data</p>
+        </div>
+      </div>
+    </section>
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-headline-sm text-on-surface">Detail Pemasukan</h3>
+      <button class="flex items-center gap-1 text-on-surface-variant hover:bg-surface-container-high px-2 py-1 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[18px]">filter_list</span>
+        <span class="font-label-md">Filter</span>
+      </button>
+    </div>
+    <div class="space-y-4" id="pemasukan-list">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm active:scale-[0.99] transition-transform cursor-pointer">
+        <div class="flex justify-between items-start">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-on-primary-fixed"><span class="material-symbols-outlined">volunteer_activism</span></div>
             <div>
-                <h3 style="margin-bottom: 20px; font-weight: 600; font-size: 18px;">10 Riwayat Transaksi Terakhir</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Kategori</th>
-                                <th>Jenis</th>
-                                <th>Jumlah</th>
-                                <th>Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            <tr>
-                                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
-                                    <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Memuat data finansial...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+              <p class="font-headline-sm text-on-surface text-[16px]">Dana Iuran Mahasiswa</p>
+              <p class="text-on-surface-variant text-body-md">Kelompok 14 - Tahap 1</p>
+              <div class="flex items-center gap-2 mt-2"><span class="material-symbols-outlined text-outline text-[14px]">calendar_today</span><span class="text-label-md text-on-surface-variant">12 Aug 2023</span></div>
             </div>
+          </div>
+          <div class="text-right">
+            <p class="text-on-primary-fixed-variant font-headline-sm text-[16px]">+ Rp 2.500.000</p>
+            <span class="text-label-md bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded uppercase">Verified</span>
+          </div>
         </div>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm active:scale-[0.99] transition-transform cursor-pointer">
+        <div class="flex justify-between items-start">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container"><span class="material-symbols-outlined">corporate_fare</span></div>
+            <div>
+              <p class="font-headline-sm text-on-surface text-[16px]">Sponsor PT Sejahtera</p>
+              <p class="text-on-surface-variant text-body-md">Donasi Program Sanitasi Desa</p>
+              <div class="flex items-center gap-2 mt-2"><span class="material-symbols-outlined text-outline text-[14px]">calendar_today</span><span class="text-label-md text-on-surface-variant">10 Aug 2023</span></div>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-on-primary-fixed-variant font-headline-sm text-[16px]">+ Rp 5.000.000</p>
+            <span class="text-label-md bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded uppercase">Verified</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm active:scale-[0.99] transition-transform cursor-pointer">
+        <div class="flex justify-between items-start">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-on-primary-fixed"><span class="material-symbols-outlined">person</span></div>
+            <div>
+              <p class="font-headline-sm text-on-surface text-[16px]">Donasi Alumni 2018</p>
+              <p class="text-on-surface-variant text-body-md">Hamba Allah - Dana Tak Terduga</p>
+              <div class="flex items-center gap-2 mt-2"><span class="material-symbols-outlined text-outline text-[14px]">calendar_today</span><span class="text-label-md text-on-surface-variant">08 Aug 2023</span></div>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-on-primary-fixed-variant font-headline-sm text-[16px]">+ Rp 750.000</p>
+            <span class="text-label-md bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded uppercase">Pending</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm active:scale-[0.99] transition-transform cursor-pointer">
+        <div class="flex justify-between items-start">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container"><span class="material-symbols-outlined">store</span></div>
+            <div>
+              <p class="font-headline-sm text-on-surface text-[16px]">Hasil Penjualan Merchandise</p>
+              <p class="text-on-surface-variant text-body-md">Bazaar Desa Minggu ke-2</p>
+              <div class="flex items-center gap-2 mt-2"><span class="material-symbols-outlined text-outline text-[14px]">calendar_today</span><span class="text-label-md text-on-surface-variant">05 Aug 2023</span></div>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-on-primary-fixed-variant font-headline-sm text-[16px]">+ Rp 1.200.000</p>
+            <span class="text-label-md bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded uppercase">Verified</span>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="h-12"></div>
+  </main>
+  <button onclick="showAddModal('pemasukan')" class="fixed bottom-24 right-6 h-14 bg-primary text-on-primary rounded-full shadow-[0_8px_24px_rgba(87,0,0,0.3)] flex items-center justify-center gap-2 active:scale-95 transition-transform z-50 px-5">
+    <span class="material-symbols-outlined">add</span>
+    <span class="font-label-md uppercase font-bold">Tambah</span>
+  </button>
+</div>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyarAddyK0ToIbgSC5-5sJLVbU3dEta9CRvqhmjg2pzXfbO-1jPY_s0BwiKCTlcbbdh/exec";
+<!-- ==================== PENGELUARAN PAGE ==================== -->
+<div id="page-pengeluaran" class="page pb-28">
+  <header class="w-full top-0 sticky z-40 bg-surface border-b border-outline-variant shadow-sm flex items-center justify-between px-margin-mobile h-16">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-primary fill-icon">account_balance_wallet</span>
+      <h1 class="font-headline-sm text-primary leading-tight">KKN BATANG KABUNG-GANTIANG</h1>
+    </div>
+  </header>
+  <main class="px-margin-mobile pt-6 flex flex-col gap-6">
+    <section class="w-full bg-primary p-6 rounded-xl shadow-lg relative overflow-hidden">
+      <div class="absolute -right-4 -top-4 opacity-10"><span class="material-symbols-outlined text-[120px]">trending_down</span></div>
+      <p class="font-label-md text-label-md text-primary-fixed-dim mb-1 uppercase tracking-wider">Total Pengeluaran Bulan Ini</p>
+      <h2 class="font-display-lg-mobile text-display-lg-mobile text-white mb-4">Rp 4.250.000</h2>
+      <div class="flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full border border-white/20">
+        <span class="material-symbols-outlined text-[16px] text-primary-fixed-dim">calendar_today</span>
+        <span class="font-label-md text-label-md text-white">Agustus 2024</span>
+      </div>
+    </section>
+    <!-- Category Filters -->
+    <section class="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2 no-scrollbar" id="expense-filters">
+      <button onclick="filterExpenses('semua')" class="bg-primary text-white px-4 py-2 rounded-full text-label-md font-label-md flex-shrink-0 active:scale-95 transition-all" data-filter="semua">Semua</button>
+      <button onclick="filterExpenses('konsumsi')" class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-label-md font-label-md flex-shrink-0 hover:bg-surface-container-highest active:scale-95 transition-all border border-outline-variant" data-filter="konsumsi">Konsumsi</button>
+      <button onclick="filterExpenses('transport')" class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-label-md font-label-md flex-shrink-0 hover:bg-surface-container-highest active:scale-95 transition-all border border-outline-variant" data-filter="transport">Transport</button>
+      <button onclick="filterExpenses('perlengkapan')" class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-label-md font-label-md flex-shrink-0 hover:bg-surface-container-highest active:scale-95 transition-all border border-outline-variant" data-filter="perlengkapan">Perlengkapan</button>
+    </section>
+    <!-- Transaction List -->
+    <section class="flex flex-col gap-4">
+      <div class="flex justify-between items-center px-1">
+        <h3 class="font-headline-sm text-on-surface">Riwayat Transaksi</h3>
+        <span class="text-on-surface-variant font-label-md text-label-md">6 Transaksi</span>
+      </div>
+      <div class="sticky top-16 bg-surface py-2 z-30">
+        <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded-md border border-outline-variant">Hari Ini, 24 Agt 2024</span>
+      </div>
+      <div class="flex flex-col gap-3" id="pengeluaran-list">
+        <div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center justify-between active:bg-surface-container-low transition-colors" data-category="konsumsi">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-on-error-container"><span class="material-symbols-outlined">restaurant</span></div>
+            <div class="flex flex-col">
+              <span class="font-body-lg text-body-lg font-bold text-on-surface">Makan Siang Kelompok</span>
+              <div class="flex items-center gap-2 mt-1"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span><span class="font-body-md text-body-md text-on-surface-variant">Budi Santoso</span></div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="font-headline-sm text-error">- Rp 120.000</span>
+            <div class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-[18px] fill-icon">receipt_long</span><span class="font-label-md text-[10px]">VERIFIED</span></div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center justify-between active:bg-surface-container-low transition-colors" data-category="transport">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container"><span class="material-symbols-outlined">commute</span></div>
+            <div class="flex flex-col">
+              <span class="font-body-lg text-body-lg font-bold text-on-surface">Bensin Operasional</span>
+              <div class="flex items-center gap-2 mt-1"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span><span class="font-body-md text-body-md text-on-surface-variant">Siti Aminah</span></div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="font-headline-sm text-error">- Rp 50.000</span>
+            <div class="flex items-center gap-1 text-on-surface-variant/40"><span class="material-symbols-outlined text-[18px]">receipt_long</span><span class="font-label-md text-[10px]">PENDING</span></div>
+          </div>
+        </div>
+        <div class="bg-surface py-2 mt-2">
+          <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded-md border border-outline-variant">Kemarin, 23 Agt 2024</span>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center justify-between active:bg-surface-container-low transition-colors" data-category="perlengkapan">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed"><span class="material-symbols-outlined">home_repair_service</span></div>
+            <div class="flex flex-col">
+              <span class="font-body-lg text-body-lg font-bold text-on-surface">Bahan Spanduk KKN</span>
+              <div class="flex items-center gap-2 mt-1"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span><span class="font-body-md text-body-md text-on-surface-variant">Budi Santoso</span></div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="font-headline-sm text-error">- Rp 275.000</span>
+            <div class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-[18px] fill-icon">receipt_long</span><span class="font-label-md text-[10px]">VERIFIED</span></div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center justify-between active:bg-surface-container-low transition-colors" data-category="konsumsi">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-on-error-container"><span class="material-symbols-outlined">grocery</span></div>
+            <div class="flex flex-col">
+              <span class="font-body-lg text-body-lg font-bold text-on-surface">Konsumsi Rapat Desa</span>
+              <div class="flex items-center gap-2 mt-1"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span><span class="font-body-md text-body-md text-on-surface-variant">Rina Wijaya</span></div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="font-headline-sm text-error">- Rp 450.000</span>
+            <div class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-[18px] fill-icon">receipt_long</span><span class="font-label-md text-[10px]">VERIFIED</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Widgets -->
+    <section class="grid grid-cols-2 gap-4 mt-2">
+      <div class="bg-surface-container-high rounded-2xl p-5 flex flex-col justify-between h-40 relative overflow-hidden border border-outline-variant">
+        <span class="material-symbols-outlined text-primary/20 text-6xl absolute -bottom-4 -right-4">analytics</span>
+        <p class="font-label-md text-label-md text-on-surface-variant">Tren Harian</p>
+        <div class="h-16 flex items-end gap-1">
+          <div class="flex-1 bg-primary/40 h-8 rounded-t-sm"></div>
+          <div class="flex-1 bg-primary/60 h-12 rounded-t-sm"></div>
+          <div class="flex-1 bg-primary/20 h-6 rounded-t-sm"></div>
+          <div class="flex-1 bg-primary h-16 rounded-t-sm"></div>
+          <div class="flex-1 bg-primary/40 h-10 rounded-t-sm"></div>
+        </div>
+      </div>
+      <div class="bg-tertiary-container text-on-tertiary-container rounded-2xl p-5 flex flex-col justify-between h-40 border border-on-tertiary-fixed-variant/20">
+        <span class="material-symbols-outlined text-on-tertiary-container/30 text-4xl">tips_and_updates</span>
+        <div>
+          <p class="font-label-md text-label-md mb-1 opacity-80">Tips Hemat</p>
+          <p class="font-body-md text-body-md leading-tight">Kurangi pembelian perlengkapan non-pokok.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <button onclick="showAddModal('pengeluaran')" class="fixed bottom-24 right-6 bg-primary text-white p-4 rounded-2xl shadow-xl flex items-center gap-2 active:scale-95 transition-all z-40 border border-primary-container">
+    <span class="material-symbols-outlined">add</span>
+    <span class="font-label-md text-label-md pr-2">Tambah Pengeluaran</span>
+  </button>
+</div>
 
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { 
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-        });
+<!-- ==================== PROFIL PAGE ==================== -->
+<div id="page-profil" class="page pb-28">
+  <header class="w-full top-0 sticky z-40 bg-surface border-b border-outline-variant shadow-sm flex items-center justify-between px-margin-mobile h-16">
+    <button onclick="navigateTo('dashboard')" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors">
+      <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+    </button>
+    <h1 class="font-headline-sm text-primary">Profil</h1>
+    <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors">
+      <span class="material-symbols-outlined text-on-surface-variant">description</span>
+    </button>
+  </header>
+  <main class="px-margin-mobile pt-8 flex flex-col items-center gap-6 max-w-lg mx-auto">
+    <!-- Avatar & Name -->
+    <section class="flex flex-col items-center">
+      <div class="relative mb-4">
+        <div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center shadow-md border-2 border-outline-variant">
+          <span class="material-symbols-outlined text-on-surface-variant text-[56px]">person</span>
+        </div>
+        <button class="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform">
+          <span class="material-symbols-outlined text-on-primary text-[16px]">edit</span>
+        </button>
+      </div>
+      <h2 class="font-headline-md text-on-surface" id="profil-nama">William Current</h2>
+      <p class="font-body-md text-on-surface-variant mt-1" id="profil-nim">NIM: 1234567890</p>
+    </section>
+    <!-- Info Cards -->
+    <section class="w-full space-y-3">
+      <div class="bg-white rounded-xl border border-outline-variant p-4 flex items-center gap-4">
+        <div class="w-10 h-10 bg-surface-container-high rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-on-surface-variant">school</span>
+        </div>
+        <div>
+          <p class="font-label-md text-label-md text-primary">PRODI</p>
+          <p class="font-body-lg text-on-surface font-semibold">Sistem Informasi</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-outline-variant p-4 flex items-center gap-4">
+        <div class="w-10 h-10 bg-surface-container-high rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-on-surface-variant">account_balance_wallet</span>
+        </div>
+        <div>
+          <p class="font-label-md text-label-md text-primary">TOTAL UANG KAS DIBAYAR</p>
+          <p class="font-body-lg text-primary font-semibold">Rp 500.000</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-outline-variant p-4 flex items-center gap-4">
+        <div class="w-10 h-10 bg-surface-container-high rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-on-surface-variant">groups</span>
+        </div>
+        <div>
+          <p class="font-label-md text-label-md text-primary">KELOMPOK KKN</p>
+          <p class="font-body-lg text-on-surface font-semibold">Desa Maju Jaya - Kelompok 42</p>
+        </div>
+      </div>
+    </section>
+    <!-- Logout -->
+    <button onclick="handleLogout()" class="w-full h-14 bg-primary text-on-primary rounded-xl font-headline-sm text-[16px] flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-md">
+      <span class="material-symbols-outlined">logout</span> Logout
+    </button>
+    <!-- Version -->
+    <div class="text-center py-4">
+      <p class="font-label-md text-label-md text-on-surface-variant/40">Versi Aplikasi 2.1.0-academic</p>
+    </div>
+  </main>
+</div>
 
-        async function fetchFinancialData() {
-            try {
-                const response = await fetch(SCRIPT_URL);
-                if (!response.ok) throw new Error("Gagal mengambil data dari server cloud.");
-                
-                const data = await response.json();
-                
-                document.getElementById('total-saldo').innerText = formatKeRupiah(data.summary.saldo);
-                document.getElementById('total-pemasukan').innerText = formatKeRupiah(data.summary.pemasukan);
-                document.getElementById('total-pengeluaran').innerText = formatKeRupiah(data.summary.pengeluaran);
+<!-- ==================== BOTTOM NAVIGATION (4 tabs) ==================== -->
+<nav id="bottom-nav" class="fixed bottom-0 w-full h-[72px] z-50 bg-surface/90 backdrop-blur-md border-t border-outline-variant shadow-[0_-4px_12px_rgba(87,0,0,0.05)] flex justify-around items-center px-2" style="display:none;">
+  <button onclick="navigateTo('dashboard')" class="nav-btn flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200 py-1 px-3" data-page="dashboard">
+    <span class="material-symbols-outlined text-[24px]">dashboard</span>
+    <span class="font-label-md text-[10px] mt-0.5">Dashboard</span>
+  </button>
+  <button onclick="navigateTo('pemasukan')" class="nav-btn flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200 py-1 px-3" data-page="pemasukan">
+    <span class="material-symbols-outlined text-[24px]">add_circle</span>
+    <span class="font-label-md text-[10px] mt-0.5">Pemasukan</span>
+  </button>
+  <button onclick="navigateTo('pengeluaran')" class="nav-btn flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200 py-1 px-3" data-page="pengeluaran">
+    <span class="material-symbols-outlined text-[24px]">remove_circle</span>
+    <span class="font-label-md text-[10px] mt-0.5">Pengeluaran</span>
+  </button>
+  <button onclick="navigateTo('profil')" class="nav-btn flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200 py-1 px-3" data-page="profil">
+    <span class="material-symbols-outlined text-[24px]">person</span>
+    <span class="font-label-md text-[10px] mt-0.5">Profil</span>
+  </button>
+</nav>
 
-                const tbody = document.getElementById('table-body');
-                tbody.innerHTML = '';
+<!-- ==================== ADD TRANSACTION MODAL ==================== -->
+<div id="add-modal" class="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal-content p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline-md text-on-surface" id="modal-title">Tambah Transaksi</h3>
+      <button onclick="closeModal()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-highest transition-colors">
+        <span class="material-symbols-outlined text-on-surface-variant">close</span>
+      </button>
+    </div>
+    <form onsubmit="addTransaction(event)" class="space-y-4">
+      <input type="hidden" id="modal-type" value="pemasukan"/>
+      <div class="space-y-sm">
+        <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">description</span> KETERANGAN</label>
+        <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="tx-name" placeholder="Nama transaksi" required="" type="text"/>
+      </div>
+      <div class="space-y-sm">
+        <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">payments</span> JUMLAH (Rp)</label>
+        <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40" id="tx-amount" placeholder="0" required="" type="number"/>
+      </div>
+      <div class="space-y-sm">
+        <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">calendar_today</span> TANGGAL</label>
+        <input class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all" id="tx-date" required="" type="date"/>
+      </div>
+      <div class="space-y-sm" id="tx-category-group">
+        <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">category</span> KATEGORI</label>
+        <select class="w-full h-12 px-md font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all" id="tx-category">
+          <option value="konsumsi">Konsumsi</option>
+          <option value="transport">Transport</option>
+          <option value="perlengkapan">Perlengkapan</option>
+          <option value="administrasi">Administrasi</option>
+        </select>
+      </div>
+      <div class="space-y-sm">
+        <label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">notes</span> CATATAN</label>
+        <textarea class="w-full px-md py-3 font-body-md text-body-md bg-surface-container-low border-[1.5px] border-outline-variant rounded-lg focus:border-primary transition-all placeholder:text-on-surface-variant/40 resize-none" id="tx-desc" placeholder="Catatan tambahan (opsional)" rows="2"></textarea>
+      </div>
+      <button class="w-full h-14 bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm shadow-md shadow-primary/10 active:scale-[0.98] transition-all flex items-center justify-center gap-3" type="submit">
+        <span class="material-symbols-outlined">save</span> Simpan Transaksi
+      </button>
+    </form>
+  </div>
+</div>
 
-                if (data.transactions.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted)">Belum ada log transaksi.</td></tr>`;
-                    return;
-                }
+<!-- ==================== TOAST ==================== -->
+<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-5 py-3 rounded-xl shadow-xl z-[200] flex items-center gap-3 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
+  <span class="material-symbols-outlined text-[20px]" id="toast-icon">check_circle</span>
+  <span class="font-body-md text-body-md" id="toast-msg">Berhasil!</span>
+</div>
 
-                data.transactions.forEach(tx => {
-                    const row = document.createElement('tr');
-                    const badgeType = tx.jenis === 'Pemasukan' ? 'badge-pemasukan' : 'badge-pengeluaran';
-                    const colorValue = tx.jenis === 'Pemasukan' ? 'var(--pemasukan)' : 'var(--pengeluaran)';
-                    
-                    row.innerHTML = `
-                        <td>${formatTanggalIndo(tx.tanggal)}</td>
-                        <td>${tx.kategori}</td>
-                        <td><span class="badge ${badgeType}">${tx.jenis}</span></td>
-                        <td style="font-weight: 600; color: ${colorValue}">${formatKeRupiah(tx.jumlah)}</td>
-                        <td style="color: var(--text-muted)">${tx.catatan || '-'}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            } catch (err) {
-                console.error(err);
-                document.getElementById('table-body').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--pengeluaran)">Gagal memuat data keuangan dari cloud database.</td></tr>`;
-            }
-        }
+<script>
+// ==================== APP STATE ====================
+let currentPage = 'login';
+let isLoggedIn = false;
+const authPages = ['login', 'register'];
+const mainPages = ['dashboard', 'pemasukan', 'pengeluaran', 'profil'];
 
-        document.getElementById('financialForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "Memproses & Menyimpan...";
-            submitBtn.disabled = true;
+// ==================== NAVIGATION ====================
+function navigateTo(page) {
+  if (!isLoggedIn && !authPages.includes(page)) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    target.classList.add('active');
+    currentPage = page;
+    updateNavBar(page);
+    window.scrollTo(0, 0);
+  }
+}
 
-            const payload = {
-                tanggal: document.getElementById('tanggal').value,
-                jenis: document.getElementById('jenis').value,
-                kategori: document.getElementById('kategori').value,
-                jumlah: document.getElementById('jumlah').value,
-                catatan: document.getElementById('catatan').value
-            };
+function navigateToAuth(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    target.classList.add('active');
+    currentPage = page;
+    window.scrollTo(0, 0);
+  }
+}
 
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+function updateNavBar(page) {
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    const isActive = btn.dataset.page === page;
+    btn.classList.toggle('text-primary', isActive);
+    btn.classList.toggle('font-bold', isActive);
+    btn.classList.toggle('text-on-surface-variant', !isActive);
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (icon) {
+      icon.style.fontVariationSettings = isActive
+        ? "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+        : "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24";
+    }
+  });
+}
 
-                alert("Transaksi Berhasil Ditambahkan ke Google Sheets!");
-                document.getElementById('financialForm').reset();
-                fetchFinancialData();
-            } catch (error) {
-                console.error(error);
-                alert("Terjadi kendala saat menyimpan transaksi.");
-            } finally {
-                submitBtn.innerText = "Simpan Transaksi";
-                submitBtn.disabled = false;
-            }
-        });
+// ==================== AUTH ====================
+// Inisialisasi localStorage untuk users
+function initializeUsers() {
+  if (!localStorage.getItem('kkn_users')) {
+    localStorage.setItem('kkn_users', JSON.stringify([]));
+  }
+  if (!localStorage.getItem('current_user')) {
+    localStorage.setItem('current_user', JSON.stringify(null));
+  }
+}
 
-        function formatKeRupiah(angka) {
-            return "Rp " + Number(angka).toLocaleString('id-ID');
-        }
+// Ambil semua pengguna terdaftar
+function getAllUsers() {
+  return JSON.parse(localStorage.getItem('kkn_users') || '[]');
+}
 
-        function formatTanggalIndo(stringTanggal) {
-            if(!stringTanggal) return '-';
-            const opsional = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(stringTanggal).toLocaleDateString('id-ID', opsional);
-        }
+// Cek apakah NIM/Email sudah terdaftar
+function isUserExists(identifier) {
+  const users = getAllUsers();
+  return users.some(u => u.id === identifier);
+}
 
-        window.onload = fetchFinancialData;
-    </script>
+// Simpan pengguna baru
+function saveUser(nama, id, password) {
+  const users = getAllUsers();
+  const newUser = {
+    nama: nama,
+    id: id,
+    password: btoa(password), // Enkripsi sederhana dengan base64
+    timestamp: new Date().toISOString()
+  };
+  users.push(newUser);
+  localStorage.setItem('kkn_users', JSON.stringify(users));
+  return newUser;
+}
+
+// Verifikasi login
+function verifyLogin(id, password) {
+  const users = getAllUsers();
+  const user = users.find(u => u.id === id);
+  if (!user) return null;
+  if (user.password === btoa(password)) return user;
+  return null;
+}
+
+// Simpan preferensi "Ingat saya"
+function saveRememberPreference(remember, id) {
+  if (remember) {
+    localStorage.setItem('remember_me', id);
+  } else {
+    localStorage.removeItem('remember_me');
+  }
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  const id = document.getElementById('login-id').value;
+  const pw = document.getElementById('login-password').value;
+  const rememberMe = document.querySelector('input[type="checkbox"]').checked;
+  
+  if (!id || !pw) {
+    showToast('Harap isi semua field!', 'error');
+    return;
+  }
+
+  const user = verifyLogin(id, pw);
+  if (!user) {
+    showToast('NIM/Email atau kata sandi salah!', 'error');
+    return;
+  }
+
+  // Simpan user yang sedang login
+  localStorage.setItem('current_user', JSON.stringify(user));
+  saveRememberPreference(rememberMe, id);
+  
+  // Update profile
+  document.getElementById('profil-nama').textContent = user.nama;
+  document.getElementById('profil-nim').textContent = 'NIM: ' + user.id;
+
+  isLoggedIn = true;
+  document.getElementById('bottom-nav').style.display = 'flex';
+  document.getElementById('login-id').value = '';
+  document.getElementById('login-password').value = '';
+  
+  navigateTo('dashboard');
+  showToast('Login berhasil! Selamat datang, ' + user.nama + '.', 'success');
+}
+
+function handleRegister(e) {
+  e.preventDefault();
+  const nama = document.getElementById('reg-nama').value;
+  const id = document.getElementById('reg-id').value;
+  const pw = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const mismatch = document.getElementById('reg-mismatch');
+
+  if (!nama || !id || !pw || !confirm) {
+    showToast('Harap isi semua field!', 'error');
+    return;
+  }
+  
+  if (pw.length < 6) {
+    showToast('Kata sandi minimal 6 karakter!', 'error');
+    return;
+  }
+  
+  if (pw !== confirm) {
+    mismatch.classList.remove('hidden');
+    showToast('Kata sandi tidak cocok!', 'error');
+    return;
+  }
+  
+  if (isUserExists(id)) {
+    showToast('NIM/Email sudah terdaftar! Gunakan yang lain.', 'error');
+    return;
+  }
+
+  mismatch.classList.add('hidden');
+
+  // Simpan pengguna baru
+  const newUser = saveUser(nama, id, pw);
+
+  // Update profile
+  document.getElementById('profil-nama').textContent = newUser.nama;
+  document.getElementById('profil-nim').textContent = 'NIM: ' + newUser.id;
+
+  // Simpan sebagai user yang sedang login
+  localStorage.setItem('current_user', JSON.stringify(newUser));
+
+  isLoggedIn = true;
+  document.getElementById('bottom-nav').style.display = 'flex';
+  navigateTo('dashboard');
+  showToast('Pendaftaran berhasil! Selamat datang, ' + nama + '.', 'success');
+
+  // Clear form
+  document.getElementById('reg-nama').value = '';
+  document.getElementById('reg-id').value = '';
+  document.getElementById('reg-password').value = '';
+  document.getElementById('reg-confirm').value = '';
+}
+
+function handleLogout() {
+  isLoggedIn = false;
+  localStorage.setItem('current_user', JSON.stringify(null));
+  document.getElementById('bottom-nav').style.display = 'none';
+  document.getElementById('login-id').value = '';
+  document.getElementById('login-password').value = '';
+  navigateToAuth('login');
+  showToast('Anda telah keluar.', 'info');
+}
+
+// ==================== PASSWORD TOGGLE ====================
+function toggleFieldVisibility(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'visibility';
+  }
+}
+
+// ==================== MODAL ====================
+function showAddModal(type) {
+  const modal = document.getElementById('add-modal');
+  const title = document.getElementById('modal-title');
+  const typeInput = document.getElementById('modal-type');
+  const catGroup = document.getElementById('tx-category-group');
+  if (type === 'pengeluaran') {
+    title.textContent = 'Tambah Pengeluaran';
+    typeInput.value = 'pengeluaran';
+    catGroup.style.display = 'block';
+  } else {
+    title.textContent = 'Tambah Pemasukan';
+    typeInput.value = 'pemasukan';
+    catGroup.style.display = 'none';
+  }
+  document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
+  modal.classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('add-modal').classList.remove('active');
+  document.getElementById('tx-name').value = '';
+  document.getElementById('tx-amount').value = '';
+  document.getElementById('tx-desc').value = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('add-modal')) closeModal();
+}
+
+function addTransaction(e) {
+  e.preventDefault();
+  const type = document.getElementById('modal-type').value;
+  const name = document.getElementById('tx-name').value;
+  const amount = document.getElementById('tx-amount').value;
+  const date = document.getElementById('tx-date').value;
+  if (!name || !amount || !date) { showToast('Harap isi semua field!', 'error'); return; }
+  const formattedAmount = parseInt(amount).toLocaleString('id-ID');
+  const dateObj = new Date(date);
+  const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  if (type === 'pemasukan') {
+    const list = document.getElementById('pemasukan-list');
+    const card = document.createElement('div');
+    card.className = 'bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm active:scale-[0.99] transition-transform cursor-pointer';
+    card.innerHTML = '<div class="flex justify-between items-start"><div class="flex gap-4"><div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-on-primary-fixed"><span class="material-symbols-outlined">payments</span></div><div><p class="font-headline-sm text-on-surface text-[16px]">' + name + '</p><p class="text-on-surface-variant text-body-md">Baru ditambahkan</p><div class="flex items-center gap-2 mt-2"><span class="material-symbols-outlined text-outline text-[14px]">calendar_today</span><span class="text-label-md text-on-surface-variant">' + dateStr + '</span></div></div></div><div class="text-right"><p class="text-on-primary-fixed-variant font-headline-sm text-[16px]">+ Rp ' + formattedAmount + '</p><span class="text-label-md bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded uppercase">Pending</span></div></div>';
+    list.insertBefore(card, list.firstChild);
+    showToast('Pemasukan berhasil ditambahkan!', 'success');
+  } else {
+    const cat = document.getElementById('tx-category').value;
+    const icons = { konsumsi: 'restaurant', transport: 'commute', perlengkapan: 'home_repair_service', administrasi: 'print' };
+    const bgs = { konsumsi: 'bg-error-container text-on-error-container', transport: 'bg-secondary-container text-on-secondary-container', perlengkapan: 'bg-tertiary-fixed text-on-tertiary-fixed', administrasi: 'bg-primary-fixed text-on-primary-fixed' };
+    const [bg, tc] = (bgs[cat] || bgs.konsumsi).split(' ');
+    const list = document.getElementById('pengeluaran-list');
+    const card = document.createElement('div');
+    card.dataset.category = cat;
+    card.className = 'bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center justify-between active:bg-surface-container-low transition-colors';
+    card.innerHTML = '<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full ' + bg + ' ' + tc + ' flex items-center justify-center"><span class="material-symbols-outlined">' + (icons[cat] || 'receipt') + '</span></div><div class="flex flex-col"><span class="font-body-lg text-body-lg font-bold text-on-surface">' + name + '</span><div class="flex items-center gap-2 mt-1"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span><span class="font-body-md text-body-md text-on-surface-variant">Anda</span></div></div></div><div class="flex flex-col items-end gap-2"><span class="font-headline-sm text-error">- Rp ' + formattedAmount + '</span><div class="flex items-center gap-1 text-on-surface-variant/40"><span class="material-symbols-outlined text-[18px]">receipt_long</span><span class="font-label-md text-[10px]">PENDING</span></div></div>';
+    list.insertBefore(card, list.firstChild);
+    showToast('Pengeluaran berhasil ditambahkan!', 'success');
+  }
+  closeModal();
+  navigateTo(type === 'pemasukan' ? 'pemasukan' : 'pengeluaran');
+}
+
+// ==================== EXPENSE FILTER ====================
+function filterExpenses(category) {
+  const items = document.querySelectorAll('#pengeluaran-list [data-category]');
+  items.forEach(item => {
+    item.style.display = (category === 'semua' || item.dataset.category === category) ? 'flex' : 'none';
+  });
+  document.querySelectorAll('#expense-filters button').forEach(btn => {
+    const isActive = btn.dataset.filter === category;
+    btn.className = isActive
+      ? 'bg-primary text-white px-4 py-2 rounded-full text-label-md font-label-md flex-shrink-0 active:scale-95 transition-all'
+      : 'bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-label-md font-label-md flex-shrink-0 hover:bg-surface-container-highest active:scale-95 transition-all border border-outline-variant';
+  });
+}
+
+// ==================== TOAST ====================
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  const msgEl = document.getElementById('toast-msg');
+  const icons = { success: 'check_circle', error: 'error', info: 'info' };
+  const colors = { success: 'text-green-400', error: 'text-red-400', info: 'text-blue-400' };
+  icon.textContent = icons[type] || icons.info;
+  icon.className = 'material-symbols-outlined text-[20px] ' + (colors[type] || colors.info);
+  msgEl.textContent = msg;
+  toast.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
+  toast.classList.add('opacity-100', 'translate-y-0');
+  setTimeout(() => {
+    toast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+    toast.classList.remove('opacity-100', 'translate-y-0');
+  }, 3000);
+}
+
+// ==================== SCROLL EFFECT ====================
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('header').forEach(h => {
+    h.classList.toggle('shadow-md', window.scrollY > 20);
+  });
+});
+
+// ==================== TOUCH FEEDBACK ====================
+document.addEventListener('DOMContentLoaded', () => {
+  // Inisialisasi sistem login
+  initializeUsers();
+  
+  // Cek jika sudah ada user yang login sebelumnya
+  const currentUser = JSON.parse(localStorage.getItem('current_user') || 'null');
+  if (currentUser) {
+    isLoggedIn = true;
+    document.getElementById('profil-nama').textContent = currentUser.nama;
+    document.getElementById('profil-nim').textContent = 'NIM: ' + currentUser.id;
+    document.getElementById('bottom-nav').style.display = 'flex';
+    navigateTo('dashboard');
+  } else {
+    // Pre-fill login form jika ada preferensi "ingat saya"
+    const rememberMe = localStorage.getItem('remember_me');
+    if (rememberMe) {
+      document.getElementById('login-id').value = rememberMe;
+      document.querySelector('input[type="checkbox"]').checked = true;
+    }
+  }
+
+  document.querySelectorAll('.bg-white.rounded-xl, .bg-surface-container-lowest').forEach(card => {
+    card.addEventListener('touchstart', () => { card.style.transform = 'scale(0.98)'; });
+    card.addEventListener('touchend', () => { card.style.transform = 'scale(1)'; });
+  });
+});
+</script>
 </body>
 </html>
