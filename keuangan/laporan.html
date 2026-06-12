@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background: #f0fdf4; font-family: 'Plus Jakarta Sans', sans-serif; padding: 20px; }
+        .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); padding: 25px; border-radius: 20px; border: 1px solid rgba(22, 163, 74, 0.2); max-width: 600px; margin: auto; }
+        h2 { color: #064e3b; margin-bottom: 20px; text-align: center; }
+        canvas { width: 100% !important; height: auto !important; }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h2>Grafik Kontribusi Kas</h2>
+        <canvas id="namaPembayarChart"></canvas>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyarAddyK0ToIbgSC5-5sJLVbU3dEta9CRvqhmjg2pzXfbO-1jPY_s0BwiKCTlcbbdh/exec";
+
+        async function initReport() {
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
+            
+            // Filter hanya Pemasukan dan jumlahkan per nama
+            const summary = {};
+            data.transactions.forEach(tx => {
+                if(tx.jenis === "Pemasukan" && tx.nama_pembayar !== "-") {
+                    summary[tx.nama_pembayar] = (summary[tx.nama_pembayar] || 0) + tx.jumlah;
+                }
+            });
+
+            new Chart(document.getElementById('namaPembayarChart'), {
+                type: 'bar', // Menggunakan grafik batang agar nama terlihat jelas
+                data: {
+                    labels: Object.keys(summary),
+                    datasets: [{
+                        label: 'Total Setoran (Rp)',
+                        data: Object.values(summary),
+                        backgroundColor: '#16a34a',
+                        borderRadius: 8
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+            });
+        }
+        initReport();
+    </script>
+</body>
+</html>
