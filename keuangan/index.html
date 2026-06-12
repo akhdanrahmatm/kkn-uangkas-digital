@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Keuangan Terpadu</title>
+    <title>Sistem Keuangan Terpadu - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-primary: #0b0518; /* Ungu gelap pekat sesuai gambar */
-            --bg-surface: #170d2c; /* Kartu ungu gelap kebiruan */
-            --primary-accent: #8b5cf6; /* Ungu Jago */
-            --secondary-accent: #d946ef; /* Graduasi Pink-Ungu */
+            --bg-primary: #0b0518; 
+            --bg-surface: #170d2c; 
+            --primary-accent: #8b5cf6; 
+            --secondary-accent: #d946ef; 
             --text-light: #f3f4f6;
             --text-muted: #9ca3af;
             --pemasukan: #10b981;
@@ -33,6 +33,136 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+        }
+
+        /* --- BACKGROUND SHAPES UNTUK EFEK GLASSMORPHISM --- */
+        .bg-glow-1, .bg-glow-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+        .bg-glow-1 {
+            top: -10%;
+            left: 10%;
+            background: radial-gradient(circle, var(--primary-accent) 0%, transparent 70%);
+        }
+        .bg-glow-2 {
+            bottom: -10%;
+            right: 10%;
+            background: radial-gradient(circle, var(--secondary-accent) 0%, transparent 70%);
+        }
+
+        /* --- SCREEN LOGIN LAYOUT --- */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            background-color: #05020c;
+        }
+
+        .login-glass-card {
+            background: rgba(23, 13, 44, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-brand {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 36px;
+        }
+
+        .input-group-custom {
+            position: relative;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .input-group-custom i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .input-glass {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-glass:focus {
+            border-color: var(--primary-accent);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .input-glass:focus + i {
+            color: var(--primary-accent);
+        }
+
+        .error-message {
+            color: var(--pengeluaran);
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: -12px;
+            margin-bottom: 16px;
+            text-align: left;
+            display: none;
+        }
+
+        /* --- SCREEN UTAMA (DASHBOARD) --- */
+        #app-screen {
+            display: none; /* Terbuka jika status login true */
+            width: 100%;
+            height: 100vh;
         }
 
         /* --- SIDEBAR DESKTOP --- */
@@ -91,7 +221,7 @@
             flex-direction: column;
             overflow-y: auto;
             padding: 40px;
-            padding-bottom: 100px; /* Jarak aman mobile nav */
+            padding-bottom: 100px;
         }
 
         .header {
@@ -107,7 +237,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* --- KARTU SALDO UTAMA (PERSIS SEPERTI GAMBAR) --- */
+        /* --- KARTU SALDO UTAMA --- */
         .balance-card {
             background: linear-gradient(135deg, #2e1065 0%, #1e1b4b 100%);
             border-radius: 24px;
@@ -117,17 +247,6 @@
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(217, 70, 239, 0.15) 0%, transparent 70%);
-            pointer-events: none;
         }
 
         .balance-label {
@@ -262,7 +381,7 @@
             transform: scale(0.98);
         }
 
-        /* --- TRANSAKSI LIST (BUKAN TABEL KAKU) --- */
+        /* --- TRANSAKSI LIST --- */
         .tx-list {
             display: flex;
             flex-direction: column;
@@ -277,12 +396,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: transform 0.2s;
-        }
-
-        .tx-item:hover {
-            transform: translateY(-2px);
-            background-color: rgba(255, 255, 255, 0.04);
         }
 
         .tx-left {
@@ -366,154 +479,206 @@
         }
 
         /* ==========================
-           BREAKPOINT MOBILE (GARANSI RESPONSIF)
+           BREAKPOINT MOBILE
            ========================== */
         @media (max-width: 900px) {
-            .sidebar {
-                display: none; /* Sembunyikan sidebar di hp */
-            }
-            .mobile-nav {
-                display: flex; /* Aktifkan navigasi bawah gaya aplikasi wallet */
-            }
-            body {
-                overflow: auto;
-                height: auto;
-            }
-            .main-content {
-                padding: 20px 16px;
-            }
-            .content-wrapper {
-                grid-template-columns: 1fr; /* Tumpuk form dan list secara rapi ke bawah */
-            }
-            .balance-amount {
-                font-size: 32px;
-            }
+            .sidebar { display: none; }
+            .mobile-nav { display: flex; }
+            body { overflow: auto; height: auto; }
+            .main-content { padding: 20px 16px; }
+            .content-wrapper { grid-template-columns: 1fr; }
+            .balance-amount { font-size: 32px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="brand">
-            <i class="fa-solid fa-circle-dollar-to-slot"></i>
-            <span>FinSpace Pro</span>
-        </div>
-        <ul class="menu-list">
-            <li><a class="menu-item active"><i class="fa-solid fa-grid-2"></i> Dashboard</a></li>
-            <li><a class="menu-item"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transaksi</a></li>
-            <li><a class="menu-item"><i class="fa-solid fa-sliders"></i> Pengaturan</a></li>
-        </ul>
-    </div>
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
 
-    <div class="main-content">
-        <div class="header">
-            <div>
-                <h1 id="greeting-text">Halo, Selamat Datang</h1>
-                <span id="current-date" style="color: var(--text-muted); font-size: 13px;"></span>
+    <div id="login-screen">
+        <div class="login-glass-card">
+            <div class="login-brand">
+                <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                <span>FinSpace Pro</span>
             </div>
-        </div>
-
-        <div class="balance-card">
-            <div class="balance-label">Total Saldo Terkumpul</div>
-            <div class="balance-amount" id="total-saldo">Rp 0</div>
+            <p class="login-subtitle">Amankan pelacakan data finansial Anda</p>
             
-            <div class="stats-row">
-                <div class="stat-box">
-                    <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.15); color: var(--pemasukan);">
-                        <i class="fa-solid fa-arrow-down"></i>
-                    </div>
-                    <div class="stat-info">
-                        <p>Pemasukan</p>
-                        <span id="total-pemasukan" style="color: var(--pemasukan);">Rp 0</span>
-                    </div>
+            <form id="loginForm">
+                <div class="input-group-custom">
+                    <input type="text" id="username" class="input-glass" placeholder="Username" required autocomplete="off">
+                    <i class="fa-solid fa-user"></i>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-icon" style="background-color: rgba(244, 63, 94, 0.15); color: var(--pengeluaran);">
-                        <i class="fa-solid fa-arrow-up"></i>
-                    </div>
-                    <div class="stat-info">
-                        <p>Pengeluaran</p>
-                        <span id="total-pengeluaran" style="color: var(--pengeluaran);">Rp 0</span>
-                    </div>
+                <div class="input-group-custom">
+                    <input type="password" id="password" class="input-glass" placeholder="Kata Sandi" required>
+                    <i class="fa-solid fa-lock"></i>
                 </div>
-            </div>
-        </div>
-
-        <div class="content-wrapper">
-            <div class="glass-card">
-                <div class="card-title">
-                    <i class="fa-solid fa-square-plus" style="color: var(--primary-accent);"></i>
-                    <span>Catat Transaksi Baru</span>
-                </div>
-                <form id="financialForm">
-                    <div class="form-group">
-                        <label>Pilih Tanggal</label>
-                        <input type="date" id="tanggal" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Jenis Aliran Dana</label>
-                        <select id="jenis" class="form-control" required>
-                            <option value="Pemasukan">Pemasukan (Uang Masuk)</option>
-                            <option value="Pengeluaran">Pengeluaran (Uang Keluar)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Kategori Finansial</label>
-                        <select id="kategori" class="form-control" required>
-                            <option value="Gaji / Pendapatan">💼 Gaji / Pendapatan</option>
-                            <option value="Makanan & Minuman">🍔 Makanan & Minuman</option>
-                            <option value="Kebutuhan Rumah Tangga">🏠 Kebutuhan Rumah</option>
-                            <option value="Transportasi / Bensin">🚗 Transportasi</option>
-                            <option value="Investasi / Tabungan">📈 Investasi / Tabungan</option>
-                            <option value="Hiburan / Jajan">🎉 Hiburan / Jajan</option>
-                            <option value="Lain-lain">✨ Lain-lain</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Jumlah Nominal (Rp)</label>
-                        <input type="number" id="jumlah" class="form-control" placeholder="Contoh: 150000" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Catatan Tambahan</label>
-                        <input type="text" id="catatan" class="form-control" placeholder="Keterangan singkat pengeluaran">
-                    </div>
-                    <button type="submit" class="btn-submit" id="submitBtn">Simpan Ke Cloud Data</button>
-                </form>
-            </div>
-
-            <div class="glass-card">
-                <div class="card-title">
-                    <i class="fa-solid fa-clock-rotate-left" style="color: var(--secondary-accent);"></i>
-                    <span>Aktivitas Finansial Terbaru</span>
-                </div>
-                
-                <div class="tx-list" id="transaction-container">
-                    <div style="text-align: center; color: var(--text-muted); padding: 20px;">
-                        <i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan ke Cloud Spreadsheet...
-                    </div>
-                </div>
-            </div>
+                <div class="error-message" id="loginErrorMessage">Username atau password salah!</div>
+                <button type="submit" class="btn-submit" style="margin-top: 8px;">Masuk Aplikasi</button>
+            </form>
         </div>
     </div>
 
-    <div class="mobile-nav">
-        <a class="nav-link-mobile active"><i class="fa-solid fa-house"></i><span>Home</span></a>
-        <a class="nav-link-mobile"><i class="fa-solid fa-chart-line"></i><span>Laporan</span></a>
-        <a class="nav-link-mobile"><i class="fa-solid fa-user-gear"></i><span>Menu</span></a>
+    <div id="app-screen">
+        <div class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                <span>FinSpace Pro</span>
+            </div>
+            <ul class="menu-list">
+                <li><a class="menu-item active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a class="menu-item"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transaksi</a></li>
+                <li><a class="menu-item" onclick="logoutSession()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1>Halo, Selamat Datang</h1>
+                    <span id="current-date" style="color: var(--text-muted); font-size: 13px;"></span>
+                </div>
+            </div>
+
+            <div class="balance-card">
+                <div class="balance-label">Total Saldo Terkumpul</div>
+                <div class="balance-amount" id="total-saldo">Rp 0</div>
+                
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.15); color: var(--pemasukan);">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Pemasukan</p>
+                            <span id="total-pemasukan" style="color: var(--pemasukan);">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon" style="background-color: rgba(244, 63, 94, 0.15); color: var(--pengeluaran);">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p>Pengeluaran</p>
+                            <span id="total-pengeluaran" style="color: var(--pengeluaran);">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="glass-card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-square-plus" style="color: var(--primary-accent);"></i>
+                        <span>Catat Transaksi Baru</span>
+                    </div>
+                    <form id="financialForm">
+                        <div class="form-group">
+                            <label>Pilih Tanggal</label>
+                            <input type="date" id="tanggal" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Aliran Dana</label>
+                            <select id="jenis" class="form-control" required>
+                                <option value="Pemasukan">Pemasukan (Uang Masuk)</option>
+                                <option value="Pengeluaran">Pengeluaran (Uang Keluar)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori Finansial</label>
+                            <select id="kategori" class="form-control" required>
+                                <option value="Gaji / Pendapatan">💼 Gaji / Pendapatan</option>
+                                <option value="Makanan & Minuman">🍔 Makanan & Minuman</option>
+                                <option value="Kebutuhan Rumah Tangga">🏠 Kebutuhan Rumah</option>
+                                <option value="Transportasi / Bensin">🚗 Transportasi</option>
+                                <option value="Investasi / Tabungan">📈 Investasi / Tabungan</option>
+                                <option value="Hiburan / Jajan">🎉 Hiburan / Jajan</option>
+                                <option value="Lain-lain">✨ Lain-lain</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Nominal (Rp)</label>
+                            <input type="number" id="jumlah" class="form-control" placeholder="Contoh: 150000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Catatan Tambahan</label>
+                            <input type="text" id="catatan" class="form-control" placeholder="Keterangan singkat pengeluaran">
+                        </div>
+                        <button type="submit" class="btn-submit" id="submitBtn">Simpan Ke Cloud Data</button>
+                    </form>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-clock-rotate-left" style="color: var(--secondary-accent);"></i>
+                        <span>Aktivitas Finansial Terbaru</span>
+                    </div>
+                    <div class="tx-list" id="transaction-container">
+                        <div style="text-align: center; color: var(--text-muted); padding: 20px;">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan ke Cloud Spreadsheet...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-nav">
+            <a class="nav-link-mobile active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a class="nav-link-mobile"><i class="fa-solid fa-chart-line"></i><span>Laporan</span></a>
+            <a class="nav-link-mobile" onclick="logoutSession()"><i class="fa-solid fa-right-from-bracket"></i><span>Keluar</span></a>
+        </div>
     </div>
 
     <script>
-        // Gunakan Web App URL milik Anda yang sudah dideploy di Google Sheets Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyarAddyK0ToIbgSC5-5sJLVbU3dEta9CRvqhmjg2pzXfbO-1jPY_s0BwiKCTlcbbdh/exec";
 
-        // Tampilkan Tanggal Indonesia Hari Ini
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { 
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+        // Kredensial Login Sederhana (Silakan sesuaikan kebutuhan Anda)
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "12345";
+
+        // Cek status sesi login saat halaman pertama kali dimuat
+        window.onload = function() {
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                showDashboard();
+            }
+        };
+
+        // Event Listener untuk Formulir Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userInput = document.getElementById('username').value;
+            const passInput = document.getElementById('password').value;
+            const errorMsg = document.getElementById('loginErrorMessage');
+
+            if (userInput === ADMIN_USER && passInput === ADMIN_PASS) {
+                localStorage.setItem("isLoggedIn", "true");
+                errorMsg.style.display = "none";
+                showDashboard();
+            } else {
+                errorMsg.style.display = "block";
+                document.getElementById('password').value = '';
+            }
         });
 
-        // Set Default Input Tanggal hari ini di Form agar user tidak repot mengisi
-        document.getElementById('tanggal').valueToDate = new Date();
-        document.getElementById('tanggal').value = new Date().toISOString().substring(0, 10);
+        // Buka Tampilan Dashboard Keuangan
+        function showDashboard() {
+            document.getElementById('login-screen').style.display = "none";
+            document.getElementById('app-screen').style.display = "flex";
+            
+            // Set penanggalan terkini
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+            document.getElementById('tanggal').value = new Date().toISOString().substring(0, 10);
+            
+            loadFinancialEngine();
+        }
+
+        // Fungsi Logout / Keluar Sesi
+        function logoutSession() {
+            localStorage.removeItem("isLoggedIn");
+            location.reload(); // Muat ulang halaman untuk mengunci kembali aplikasi
+        }
 
         // Fetch Data Finansial (GET)
         async function loadFinancialEngine() {
@@ -523,12 +688,10 @@
                 if (!response.ok) throw new Error();
                 const data = await response.json();
                 
-                // Distribusikan nilai ke Card Rekap Saldo
                 document.getElementById('total-saldo').innerText = formatRupiahFormat(data.summary.saldo);
                 document.getElementById('total-pemasukan').innerText = formatRupiahFormat(data.summary.pemasukan);
                 document.getElementById('total-pengeluaran').innerText = formatRupiahFormat(data.summary.pengeluaran);
 
-                // Bersihkan Loader & Render Riwayat Transaksi Card Gaya List
                 container.innerHTML = '';
                 if(data.transactions.length === 0) {
                     container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada riwayat transaksi terdeteksi.</div>';
@@ -539,7 +702,6 @@
                     const item = document.createElement('div');
                     item.className = 'tx-item';
 
-                    // Pilih Ikon Dinamis Berdasarkan Kategori
                     let iconClass = "fa-solid fa-wallet";
                     let iconBg = "rgba(139, 92, 246, 0.15)";
                     let iconColor = "var(--primary-accent)";
@@ -622,8 +784,6 @@
             if(!dateStr) return '-';
             return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         }
-
-        window.onload = loadFinancialEngine;
     </script>
 </body>
 </html>
