@@ -60,74 +60,55 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
 
-        function loadDashboard() {
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?callback=renderData`;
-            document.body.appendChild(script);
-        }
-
-       function renderData(data) {
-    // Menampilkan Total Gram saja karena harga real-time sudah dihapus
-    document.getElementById("balance-idr").innerText = data.totalGram + " gr";
-    const container = document.getElementById("user-list");
-    container.innerHTML = "";
-    data.users.forEach(user => {
-        container.innerHTML += `
-        <div class="glass-card rounded-[25px] p-4 flex justify-between items-center">
-            <h4 class="font-semibold">${user.name}</h4>
-            <h4 class="font-bold text-gold">${user.gram} gr</h4>
-        </div>`;
-    });
-}
-
-        function openModal() { document.getElementById('modalTambah').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('modalTambah').classList.add('hidden'); }
-
-        async function submitForm() {
-    const nama = document.getElementById('inputNama').value;
-    const gram = document.getElementById('inputGram').value;
-    const jenis = document.getElementById('inputJenis').value;
-    const btn = document.getElementById('btnSubmit');
-
-    if(!nama || !gram) return alert("Mohon isi Nama dan Jumlah Gram!");
-
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-    btn.disabled = true;
-
-    try {
-        // Menggunakan fetch (lebih cepat dari createElement script)
-        const response = await fetch(`${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}`);
-        const result = await response.json();
-        
-        if (result.status === "success") {
-            alert("Berhasil dicatat!");
-            location.reload();
-        }
-    } catch (error) {
-        alert("Error: Terjadi kendala koneksi.");
-        btn.innerHTML = "Konfirmasi Pembelian Emas";
-        btn.disabled = false;
+    function loadDashboard() {
+        const script = document.createElement("script");
+        // Kita gunakan JSONP untuk loading data agar tidak kena CORS
+        script.src = `${SCRIPT_URL}?callback=renderData`;
+        document.body.appendChild(script);
     }
-}
 
-            if(!nama || !gram) return alert("Mohon isi Nama dan Jumlah Gram!");
+    function renderData(data) {
+        document.getElementById("balance-idr").innerText = data.totalGram + " gr";
+        const container = document.getElementById("user-list");
+        container.innerHTML = "";
+        data.users.forEach(user => {
+            container.innerHTML += `
+            <div class="glass-card rounded-[25px] p-4 flex justify-between items-center">
+                <h4 class="font-semibold">${user.name}</h4>
+                <h4 class="font-bold text-gold">${user.gram} gr</h4>
+            </div>`;
+        });
+    }
 
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-            btn.disabled = true;
+    function openModal() { document.getElementById('modalTambah').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('modalTambah').classList.add('hidden'); }
 
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
-            document.body.appendChild(script);
-        }
+    // Gunakan JSONP (callback) agar selaras dengan Code.gs Anda
+    function submitForm() {
+        const nama = document.getElementById('inputNama').value;
+        const gram = document.getElementById('inputGram').value;
+        const jenis = document.getElementById('inputJenis').value;
+        const btn = document.getElementById('btnSubmit');
 
-        function onSuccessSubmit() {
-            alert("Berhasil dicatat!");
-            location.reload();
-        }
+        if(!nama || !gram) return alert("Mohon isi semua data!");
 
-        window.onload = loadDashboard;
-    </script>
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+        btn.disabled = true;
+
+        const script = document.createElement("script");
+        // Panggil script dengan callback agar bisa diproses oleh ContentService di Google
+        script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+        document.body.appendChild(script);
+    }
+
+    function onSuccessSubmit() {
+        alert("Berhasil dicatat!");
+        location.reload();
+    }
+
+    window.onload = loadDashboard;
+</script>
 </body>
 </html>
