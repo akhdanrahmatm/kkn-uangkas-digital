@@ -444,6 +444,14 @@
             outline: none;
             font-size: 14px;
             transition: all 0.3s ease;
+            
+            /* --- FIX KHUSUS UNTUK IPHONE / iOS --- */
+            -webkit-appearance: none; /* Mematikan style bawaan Apple */
+            appearance: none;
+            font-family: inherit; /* Memaksa font mengikuti Plus Jakarta Sans */
+            background-clip: padding-box;
+            opacity: 1; /* Mencegah iOS membuat input terlihat redup */
+            min-height: 46px; /* Menyamakan tinggi semua form */
         }
 
         .form-control:focus {
@@ -452,6 +460,22 @@
             box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
         }
 
+        /* Penyesuaian khusus kalender di iOS agar teks tidak offset/naik turun */
+        input[type="date"].form-control {
+            display: block;
+            text-align: left;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        /* Karena appearance: none mematikan panah dropdown, kita buat panah kustom */
+        select.form-control {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
         /* --- FLOATING ACTION BUTTON (FAB) --- */
         .fab-btn {
             position: fixed;
