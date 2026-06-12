@@ -85,11 +85,32 @@
         function openModal() { document.getElementById('modalTambah').classList.remove('hidden'); }
         function closeModal() { document.getElementById('modalTambah').classList.add('hidden'); }
 
-        function submitForm() {
-            const nama = document.getElementById('inputNama').value;
-            const gram = document.getElementById('inputGram').value;
-            const jenis = document.getElementById('inputJenis').value;
-            const btn = document.getElementById('btnSubmit');
+        async function submitForm() {
+    const nama = document.getElementById('inputNama').value;
+    const gram = document.getElementById('inputGram').value;
+    const jenis = document.getElementById('inputJenis').value;
+    const btn = document.getElementById('btnSubmit');
+
+    if(!nama || !gram) return alert("Mohon isi Nama dan Jumlah Gram!");
+
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+    btn.disabled = true;
+
+    try {
+        // Menggunakan fetch (lebih cepat dari createElement script)
+        const response = await fetch(`${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}`);
+        const result = await response.json();
+        
+        if (result.status === "success") {
+            alert("Berhasil dicatat!");
+            location.reload();
+        }
+    } catch (error) {
+        alert("Error: Terjadi kendala koneksi.");
+        btn.innerHTML = "Konfirmasi Pembelian Emas";
+        btn.disabled = false;
+    }
+}
 
             if(!nama || !gram) return alert("Mohon isi Nama dan Jumlah Gram!");
 
