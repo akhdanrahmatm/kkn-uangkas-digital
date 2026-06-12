@@ -523,6 +523,14 @@
             text-decoration: none;
             font-size: 11px;
             font-weight: 600;
+            padding: 8px 12px;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            position: relative;
+            min-height: 50px;
+            justify-content: center;
         }
 
         .nav-link-mobile.active {
@@ -698,9 +706,9 @@
     </div>
 
     <div class="mobile-nav">
-        <a class="nav-link-mobile active"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
-        <a href="laporan.html" class="nav-link-mobile"><i class="fa-solid fa-chart-pie"></i><span>Laporan</span></a>
-        <a class="nav-link-mobile" onclick="prosesLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Keluar</span></a>
+        <a class="nav-link-mobile active" href="javascript:void(0)"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+        <a class="nav-link-mobile" href="laporan.html"><i class="fa-solid fa-chart-pie"></i><span>Laporan</span></a>
+        <a class="nav-link-mobile" href="javascript:void(0)" onclick="prosesLogout(); return false;"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Keluar</span></a>
     </div>
 
     <script>
@@ -904,6 +912,17 @@
             if(!dateStr) return '-';
             return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         }
+
+        // Pastikan mobile nav links berfungsi di iOS
+        document.querySelectorAll('.nav-link-mobile').forEach(link => {
+            link.style.webkitTouchCallout = 'none';
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href !== 'javascript:void(0)') {
+                    window.location.href = href;
+                }
+            });
+        });
 
         window.onload = loadFinancialEngine;
     </script>
