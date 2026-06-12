@@ -10,16 +10,16 @@
     <style>
         :root {
             /* TEMA HIJAU - PUTIH */
-            --bg-primary: #f0fdf4; /* Hijau sangat muda (background luar) */
-            --bg-surface: #ffffff; /* Putih solid untuk kartu */
-            --primary-accent: #16a34a; /* Hijau solid (Green 600) */
-            --secondary-accent: #22c55e; /* Hijau muda (Green 500) */
-            --text-main: #064e3b; /* Hijau gelap pekat untuk teks judul */
-            --text-muted: #64748b; /* Abu-abu untuk teks biasa */
-            --pemasukan: #059669; /* Hijau untuk uang masuk */
-            --pengeluaran: #ef4444; /* Merah untuk uang keluar */
+            --bg-primary: #f0fdf4; 
+            --bg-surface: #ffffff; 
+            --primary-accent: #16a34a; 
+            --secondary-accent: #22c55e; 
+            --text-main: #064e3b; 
+            --text-muted: #64748b; 
+            --pemasukan: #059669; 
+            --pengeluaran: #ef4444; 
             --border-glow: rgba(22, 163, 74, 0.2);
-            --glass-bg: rgba(255, 255, 255, 0.85); /* Latar belakang kaca putih */
+            --glass-bg: rgba(255, 255, 255, 0.85); 
         }
 
         * {
@@ -35,21 +35,18 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
-            /* Latar belakang dengan sedikit gradien hijau halus */
             background-image: radial-gradient(circle at top right, #dcfce7 0%, transparent 40%),
                               radial-gradient(circle at bottom left, #ecfdf5 0%, transparent 40%);
         }
 
-        /* =========================================
-           CSS KHUSUS OVERLAY LOGIN GLASS (Hijau/Putih)
-           ========================================= */
+        /* OVERLAY LOGIN */
         #login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(240, 253, 244, 0.6); /* Hijau muda transparan */
+            background-color: rgba(240, 253, 244, 0.6);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             z-index: 9999;
@@ -69,7 +66,7 @@
             text-align: center;
         }
 
-        .login-box i.fa-vault {
+        .login-box i.fa-leaf {
             font-size: 44px;
             color: var(--primary-accent);
             margin-bottom: 16px;
@@ -289,7 +286,6 @@
             padding: 28px;
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            /* Membiarkan list transaksi melebar penuh karena form dihilangkan */
             width: 100%; 
         }
 
@@ -384,7 +380,7 @@
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             z-index: 10000;
-            display: none; /* Disembunyikan secara default */
+            display: none; 
             justify-content: center;
             align-items: center;
         }
@@ -446,12 +442,12 @@
             transition: all 0.3s ease;
             
             /* --- FIX KHUSUS UNTUK IPHONE / iOS --- */
-            -webkit-appearance: none; /* Mematikan style bawaan Apple */
+            -webkit-appearance: none; 
             appearance: none;
-            font-family: inherit; /* Memaksa font mengikuti Plus Jakarta Sans */
+            font-family: inherit; 
             background-clip: padding-box;
-            opacity: 1; /* Mencegah iOS membuat input terlihat redup */
-            min-height: 46px; /* Menyamakan tinggi semua form */
+            opacity: 1; 
+            min-height: 46px; 
         }
 
         .form-control:focus {
@@ -460,7 +456,6 @@
             box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
         }
 
-        /* Penyesuaian khusus kalender di iOS agar teks tidak offset/naik turun */
         input[type="date"].form-control {
             display: block;
             text-align: left;
@@ -468,7 +463,6 @@
             align-items: center;
         }
 
-        /* Karena appearance: none mematikan panah dropdown, kita buat panah kustom */
         select.form-control {
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
@@ -476,6 +470,7 @@
             background-size: 16px;
             padding-right: 40px;
         }
+
         /* --- FLOATING ACTION BUTTON (FAB) --- */
         .fab-btn {
             position: fixed;
@@ -538,36 +533,19 @@
             font-size: 20px;
         }
 
-        /* ==========================
-           BREAKPOINT MOBILE
-           ========================== */
         @media (max-width: 900px) {
-            .sidebar {
-                display: none; 
-            }
-            .mobile-nav {
-                display: flex; 
-            }
-            body {
-                overflow: auto;
-                height: auto;
-            }
-            .main-content {
-                padding: 20px 16px;
-                padding-bottom: 120px;
-            }
-            .balance-amount {
-                font-size: 32px;
-            }
+            .sidebar { display: none; }
+            .mobile-nav { display: flex; }
+            body { overflow: auto; height: auto; }
+            .main-content { padding: 20px 16px; padding-bottom: 120px; }
+            .balance-amount { font-size: 32px; }
             .fab-btn {
-                bottom: 90px; /* Di atas navbar mobile */
+                bottom: 90px;
                 right: 20px;
                 padding: 16px;
-                border-radius: 50%; /* Jadi bulat di HP */
+                border-radius: 50%; 
             }
-            .fab-btn span {
-                display: none; /* Sembunyikan teks di HP, sisakan icon + */
-            }
+            .fab-btn span { display: none; }
         }
     </style>
 </head>
@@ -666,13 +644,36 @@
                     <label>Pilih Tanggal</label>
                     <input type="date" id="tanggal" class="form-control" required>
                 </div>
+                
                 <div class="form-group">
                     <label>Jenis Uang KAS</label>
-                    <select id="jenis" class="form-control" required>
+                    <select id="jenis" class="form-control" required onchange="toggleNamaPembayar()">
                         <option value="Pemasukan">Pemasukan</option>
                         <option value="Pengeluaran">Pengeluaran</option>
                     </select>
                 </div>
+
+                <div class="form-group" id="group-nama-pembayar">
+                    <label>Nama Pembayar</label>
+                    <select id="nama_pembayar" class="form-control">
+                        <option value="Rohimi Fajri">Rohimi Fajri</option>
+                        <option value="Zerlinda sonia">Zerlinda sonia</option>
+                        <option value="Nofatny afda lasegi">Nofatny afda lasegi</option>
+                        <option value="akhdan rahmat m">akhdan rahmat m</option>
+                        <option value="Gilang Pratama Putra">Gilang Pratama Putra</option>
+                        <option value="dimas">dimas</option>
+                        <option value="Riska Fitriza">Riska Fitriza</option>
+                        <option value="Ferina aurelyo">Ferina aurelyo</option>
+                        <option value="Restia Gusnita">Restia Gusnita</option>
+                        <option value="Rhain ahmad">Rhain ahmad</option>
+                        <option value="Dira Aldi Saputra">Dira Aldi Saputra</option>
+                        <option value="nurdian islami">nurdian islami</option>
+                        <option value="Nabila Revanizahra">Nabila Revanizahra</option>
+                        <option value="alma Badriyah">alma Badriyah</option>
+                        <option value="Lainya">Lainya</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label>Kategori KAS</label>
                     <select id="kategori" class="form-control" required>
@@ -680,14 +681,17 @@
                         <option value="Non Proker">☕ Non Proker</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
                     <label>Jumlah Nominal (Rp)</label>
                     <input type="number" id="jumlah" class="form-control" placeholder="Contoh: 50000" required>
                 </div>
+                
                 <div class="form-group">
                     <label>Catatan Tambahan</label>
                     <input type="text" id="catatan" class="form-control" placeholder="Tulis keterangan..." required>
                 </div>
+                
                 <button type="submit" class="btn-submit" id="submitBtn" style="margin-top: 10px;">Simpan Catatan</button>
             </form>
         </div>
@@ -735,21 +739,35 @@
         }
 
         // =========================================
-        // LOGIKA MODAL POP-UP FORM
+        // LOGIKA MODAL POP-UP FORM & TOGGLE DROPDOWN
         // =========================================
         const modalOverlay = document.getElementById('form-modal-overlay');
 
+        function toggleNamaPembayar() {
+            const jenisVal = document.getElementById('jenis').value;
+            const groupNama = document.getElementById('group-nama-pembayar');
+            
+            // Sembunyikan form Nama jika jenis adalah Pengeluaran
+            if (jenisVal === 'Pengeluaran') {
+                groupNama.style.display = 'none';
+            } else {
+                groupNama.style.display = 'block';
+            }
+        }
+
         function bukaModalForm() {
             modalOverlay.style.display = "flex";
-            // Reset tanggal ke hari ini setiap dibuka
             document.getElementById('tanggal').value = new Date().toISOString().substring(0, 10);
+            
+            // Set default ke Pemasukan saat modal dibuka, dan perbarui UI dropdown Nama
+            document.getElementById('jenis').value = 'Pemasukan';
+            toggleNamaPembayar();
         }
 
         function tutupModalForm() {
             modalOverlay.style.display = "none";
         }
 
-        // Tutup modal jika klik area luar box
         modalOverlay.addEventListener('click', function(e) {
             if (e.target === modalOverlay) {
                 tutupModalForm();
@@ -786,7 +804,6 @@
                     const item = document.createElement('div');
                     item.className = 'tx-item';
 
-                    // Pengaturan style berdasarkan jenis
                     let iconClass = "fa-solid fa-wallet";
                     let iconBg = "rgba(22, 163, 74, 0.15)";
                     let iconColor = "var(--primary-accent)";
@@ -807,6 +824,12 @@
                         operator = "-";
                     }
 
+                    // Tampilkan nama pembayar untuk Pemasukan di list transaksi agar lebih informatif
+                    let detailInfo = tx.catatan || '-';
+                    if (tx.jenis === "Pemasukan" && tx.nama_pembayar && tx.nama_pembayar !== "-") {
+                        detailInfo = tx.nama_pembayar + " - " + detailInfo;
+                    }
+
                     item.innerHTML = `
                         <div class="tx-left">
                             <div class="tx-icon-wrapper" style="background-color: ${iconBg}; color: ${iconColor};">
@@ -814,7 +837,7 @@
                             </div>
                             <div class="tx-details">
                                 <h4>${tx.kategori}</h4>
-                                <p>${formatTanggalId(tx.tanggal)} • <span style="font-weight:600;">${tx.catatan || '-'}</span></p>
+                                <p>${formatTanggalId(tx.tanggal)} • <span style="font-weight:600;">${detailInfo}</span></p>
                             </div>
                         </div>
                         <div class="tx-right">
@@ -838,9 +861,14 @@
             btn.innerText = "Menyimpan...";
             btn.disabled = true;
 
+            const jenisVal = document.getElementById('jenis').value;
+            // Jika jenis pengeluaran, parameter nama_pembayar kita isi '-'
+            const namaPembayarVal = jenisVal === 'Pemasukan' ? document.getElementById('nama_pembayar').value : '-';
+
             const payload = {
                 tanggal: document.getElementById('tanggal').value,
-                jenis: document.getElementById('jenis').value,
+                jenis: jenisVal,
+                nama_pembayar: namaPembayarVal,
                 kategori: document.getElementById('kategori').value,
                 jumlah: document.getElementById('jumlah').value,
                 catatan: document.getElementById('catatan').value
@@ -856,9 +884,8 @@
 
                 alert("Catatan Berhasil Disimpan!");
                 document.getElementById('financialForm').reset();
-                tutupModalForm(); // Tutup popup setelah sukses
+                tutupModalForm(); 
                 
-                // Beri indikator loading pada list saat mengambil data baru
                 document.getElementById('transaction-container').innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 30px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Memperbarui data...</div>';
                 loadFinancialEngine();
             } catch (error) {
