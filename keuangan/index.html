@@ -193,4 +193,559 @@
             position: relative;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 40px rgba(0, 0
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .balance-label {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+        }
+
+        .stat-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .stat-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-info span {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* --- LAYOUT GRID --- */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .glass-card {
+            background-color: var(--bg-surface);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- BENTUK FORM INPUT PREMIUM --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-accent);
+            background-color: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+        }
+
+        select.form-control option {
+            background-color: var(--bg-surface);
+            color: #fff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* --- TRANSAKSI LIST --- */
+        .tx-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tx-item {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .tx-item:hover {
+            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .tx-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .tx-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .tx-details h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tx-details p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .tx-right {
+            text-align: right;
+        }
+
+        .tx-amount {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .tx-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* --- MOBILE BOTTOM NAVBAR --- */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background-color: rgba(23, 13, 44, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            padding: 0 12px;
+        }
+
+        .nav-link-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .nav-link-mobile.active {
+            color: var(--primary-accent);
+        }
+
+        .nav-link-mobile i {
+            font-size: 20px;
+        }
+
+        /* ==========================
+           BREAKPOINT MOBILE 
+           ========================== */
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none; 
+            }
+            .mobile-nav {
+                display: flex; 
+            }
+            body {
+                overflow: auto;
+                height: auto;
+            }
+            .main-content {
+                padding: 20px 16px;
+            }
+            .content-wrapper {
+                grid-template-columns: 1fr; 
+            }
+            .balance-amount {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <i class="fa-solid fa-vault"></i>
+            <h2>Selamat Datang</h2>
+            <p>Silakan masuk untuk mengakses data finansial.</p>
+            
+            <form id="formLogin">
+                <input type="text" id="username" class="login-input" placeholder="Username" required autocomplete="off">
+                <input type="password" id="password" class="login-input" placeholder="Password" required>
+                <div id="login-error">Username atau password salah!</div>
+                <button type="submit" class="btn-submit">Buka Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-circle-dollar-to-slot"></i>
+            <span>FinSpace Pro</span>
+        </div>
+        <ul class="menu-list">
+            <li><a class="menu-item active"><i class="fa-solid fa-grid-2"></i> Dashboard</a></li>
+            <li><a class="menu-item"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transaksi</a></li>
+            <li><a class="menu-item" onclick="prosesLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1 id="greeting-text">Halo, Selamat Datang</h1>
+                <span id="current-date" style="color: var(--text-muted); font-size: 13px;"></span>
+            </div>
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-label">Total Saldo Terkumpul</div>
+            <div class="balance-amount" id="total-saldo">Rp 0</div>
+            
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.15); color: var(--pemasukan);">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </div>
+                    <div class="stat-info">
+                        <p>Pemasukan</p>
+                        <span id="total-pemasukan" style="color: var(--pemasukan);">Rp 0</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon" style="background-color: rgba(244, 63, 94, 0.15); color: var(--pengeluaran);">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </div>
+                    <div class="stat-info">
+                        <p>Pengeluaran</p>
+                        <span id="total-pengeluaran" style="color: var(--pengeluaran);">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="glass-card">
+                <div class="card-title">
+                    <i class="fa-solid fa-square-plus" style="color: var(--primary-accent);"></i>
+                    <span>Catat Transaksi Baru</span>
+                </div>
+                <form id="financialForm">
+                    <div class="form-group">
+                        <label>Pilih Tanggal</label>
+                        <input type="date" id="tanggal" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Aliran Dana</label>
+                        <select id="jenis" class="form-control" required>
+                            <option value="Pemasukan">Pemasukan (Uang Masuk)</option>
+                            <option value="Pengeluaran">Pengeluaran (Uang Keluar)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori Finansial</label>
+                        <select id="kategori" class="form-control" required>
+                            <option value="Gaji / Pendapatan">💼 Gaji / Pendapatan</option>
+                            <option value="Makanan & Minuman">🍔 Makanan & Minuman</option>
+                            <option value="Kebutuhan Rumah Tangga">🏠 Kebutuhan Rumah</option>
+                            <option value="Transportasi / Bensin">🚗 Transportasi</option>
+                            <option value="Investasi / Tabungan">📈 Investasi / Tabungan</option>
+                            <option value="Hiburan / Jajan">🎉 Hiburan / Jajan</option>
+                            <option value="Lain-lain">✨ Lain-lain</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah Nominal (Rp)</label>
+                        <input type="number" id="jumlah" class="form-control" placeholder="Contoh: 150000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Catatan Tambahan</label>
+                        <input type="text" id="catatan" class="form-control" placeholder="Keterangan singkat pengeluaran">
+                    </div>
+                    <button type="submit" class="btn-submit" id="submitBtn">Simpan Ke Cloud Data</button>
+                </form>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-title">
+                    <i class="fa-solid fa-clock-rotate-left" style="color: var(--secondary-accent);"></i>
+                    <span>Aktivitas Finansial Terbaru</span>
+                </div>
+                
+                <div class="tx-list" id="transaction-container">
+                    <div style="text-align: center; color: var(--text-muted); padding: 20px;">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan ke Cloud Spreadsheet...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-nav">
+        <a class="nav-link-mobile active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a class="nav-link-mobile"><i class="fa-solid fa-chart-line"></i><span>Laporan</span></a>
+        <a class="nav-link-mobile" onclick="prosesLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Keluar</span></a>
+    </div>
+
+    <script>
+        // =========================================
+        // LOGIKA LOGIN
+        // =========================================
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "12345";
+        
+        const loginOverlay = document.getElementById('login-overlay');
+        const loginForm = document.getElementById('formLogin');
+        const loginError = document.getElementById('login-error');
+
+        // Cek apakah sudah pernah login
+        if (localStorage.getItem("isLoggedIn") === "true") {
+            loginOverlay.style.display = "none";
+        }
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                localStorage.setItem("isLoggedIn", "true");
+                loginOverlay.style.display = "none";
+                loginError.style.display = "none";
+            } else {
+                loginError.style.display = "block";
+                document.getElementById('password').value = "";
+            }
+        });
+
+        function prosesLogout() {
+            localStorage.removeItem("isLoggedIn");
+            location.reload();
+        }
+
+        // =========================================
+        // LOGIKA APLIKASI (TETAP SAMA)
+        // =========================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyarAddyK0ToIbgSC5-5sJLVbU3dEta9CRvqhmjg2pzXfbO-1jPY_s0BwiKCTlcbbdh/exec";
+
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+        });
+
+        document.getElementById('tanggal').valueToDate = new Date();
+        document.getElementById('tanggal').value = new Date().toISOString().substring(0, 10);
+
+        async function loadFinancialEngine() {
+            const container = document.getElementById('transaction-container');
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                
+                document.getElementById('total-saldo').innerText = formatRupiahFormat(data.summary.saldo);
+                document.getElementById('total-pemasukan').innerText = formatRupiahFormat(data.summary.pemasukan);
+                document.getElementById('total-pengeluaran').innerText = formatRupiahFormat(data.summary.pengeluaran);
+
+                container.innerHTML = '';
+                if(data.transactions.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada riwayat transaksi terdeteksi.</div>';
+                    return;
+                }
+
+                data.transactions.forEach(tx => {
+                    const item = document.createElement('div');
+                    item.className = 'tx-item';
+
+                    let iconClass = "fa-solid fa-wallet";
+                    let iconBg = "rgba(139, 92, 246, 0.15)";
+                    let iconColor = "var(--primary-accent)";
+
+                    if(tx.jenis === "Pemasukan") {
+                        iconClass = "fa-solid fa-money-bill-trend-up";
+                        iconBg = "rgba(16, 185, 129, 0.1)";
+                        iconColor = "var(--pemasukan)";
+                    } else {
+                        iconClass = "fa-solid fa-basket-shopping";
+                        iconBg = "rgba(244, 63, 94, 0.1)";
+                        iconColor = "var(--pengeluaran)";
+                    }
+
+                    item.innerHTML = `
+                        <div class="tx-left">
+                            <div class="tx-icon-wrapper" style="background-color: ${iconBg}; color: ${iconColor};">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="tx-details">
+                                <h4>${tx.kategori}</h4>
+                                <p>${formatTanggalId(tx.tanggal)} • <span style="color:#fff;">${tx.catatan || '-'}</span></p>
+                            </div>
+                        </div>
+                        <div class="tx-right">
+                            <div class="tx-amount" style="color: ${tx.jenis === 'Pemasukan' ? 'var(--pemasukan)' : 'var(--text-light)'}">
+                                ${tx.jenis === 'Pemasukan' ? '+' : '-'} ${formatRupiahFormat(tx.jumlah)}
+                            </div>
+                            <span class="tx-badge" style="background-color:${iconBg}; color:${iconColor};">${tx.jenis}</span>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+            } catch (err) {
+                container.innerHTML = '<div style="text-align:center;color:var(--pengeluaran);padding:20px;">Koneksi Database Cloud Terputus / Timeout.</div>';
+            }
+        }
+
+        document.getElementById('financialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "Mengamankan Data Transaksi...";
+            btn.disabled = true;
+
+            const payload = {
+                tanggal: document.getElementById('tanggal').value,
+                jenis: document.getElementById('jenis').value,
+                kategori: document.getElementById('kategori').value,
+                jumlah: document.getElementById('jumlah').value,
+                catatan: document.getElementById('catatan').value
+            };
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                alert("Sukses! Transaksi Berhasil Tersimpan Ke Cloud Spreadsheet.");
+                document.getElementById('catatan').value = '';
+                document.getElementById('jumlah').value = '';
+                loadFinancialEngine();
+            } catch (error) {
+                alert("Gagal memproses transaksi.");
+            } finally {
+                btn.innerText = "Simpan Ke Cloud Data";
+                btn.disabled = false;
+            }
+        });
+
+        function formatRupiahFormat(num) {
+            return "Rp " + Number(num).toLocaleString('id-ID');
+        }
+
+        function formatTanggalId(dateStr) {
+            if(!dateStr) return '-';
+            return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        }
+
+        window.onload = loadFinancialEngine;
+    </script>
+</body>
+</html>
