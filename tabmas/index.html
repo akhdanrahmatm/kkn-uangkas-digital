@@ -198,23 +198,31 @@
             document.getElementById('inputGram').value = "";
         }
 
-        function submitForm() {
-            const nama = document.getElementById('inputNama').value;
-            const gram = document.getElementById('inputGram').value;
-            const btn = document.getElementById('btnSubmit');
+                        return;function submitForm() {
+    const nama = document.getElementById('inputNama').value;
+    const gram = document.getElementById('inputGram').value;
+    const btn = document.getElementById('btnSubmit');
 
-            if(!nama || !gram) {
-                alert("Mohon isi Nama dan Jumlah Gram!");
-                return;
-            }
+    if(!nama || !gram) return alert("Mohon isi semua data!");
 
-            btn.innerText = "Memproses Transaksi...";
-            btn.disabled = true;
+    // 1. Ubah UI Instan agar user merasa aplikasi responsif
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sedang Memproses...';
+    btn.classList.add('opacity-70');
+    btn.disabled = true;
 
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
-            document.body.appendChild(script);
-        }
+    // 2. Timeout untuk mencegah user mengklik berkali-kali
+    const script = document.createElement("script");
+    script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(document.getElementById('inputJenis').value)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+    
+    // 3. Tambahkan error handling jika Google gagal merespons
+    script.onerror = function() {
+        alert("Server Google lambat, mohon tunggu sebentar atau refresh halaman.");
+        btn.innerHTML = "Konfirmasi Pembelian Emas";
+        btn.disabled = false;
+    };
+    
+    document.body.appendChild(script);
+}
 
         function onSuccessSubmit(response) {
             alert("Pembelian emas berhasil dicatat!");
