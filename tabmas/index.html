@@ -59,6 +59,65 @@
         </div>
     </div>
 
+<div id="modalJual" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
+    <div class="bg-white w-full max-w-md rounded-[30px] p-8 shadow-2xl">
+        <h3 class="text-2xl font-bold mb-4">Jual Emas</h3>
+        <select id="jualNama" onchange="updateJenisJual()" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-4">
+            <option value="">Pilih Anggota</option>
+        </select>
+        <select id="jualJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-4">
+            <option value="">Pilih Jenis</option>
+        </select>
+        <input type="number" id="jualGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Jumlah (gr)">
+        <button onclick="submitJual()" class="w-full bg-red-600 text-white font-bold py-4 rounded-2xl mt-4">Jual Sekarang</button>
+        <button onclick="document.getElementById('modalJual').classList.add('hidden')" class="w-full text-gray-500 mt-2">Batal</button>
+    </div>
+</div>
+
+<button onclick="openJualModal()" class="flex flex-col items-center gap-2 group"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-hand-holding-dollar"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Jual</span></button>
+
+<script>
+    let memberData = {};
+
+    async function openJualModal() {
+        document.getElementById('modalJual').classList.remove('hidden');
+        const script = document.createElement("script");
+        script.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`;
+        document.body.appendChild(script);
+    }
+
+    function initJual(data) {
+        memberData = data;
+        const select = document.getElementById('jualNama');
+        select.innerHTML = '<option value="">Pilih Anggota</option>';
+        Object.keys(data).forEach(name => {
+            select.innerHTML += `<option value="${name}">${name}</option>`;
+        });
+    }
+
+    function updateJenisJual() {
+        const nama = document.getElementById('jualNama').value;
+        const selectJenis = document.getElementById('jualJenis');
+        selectJenis.innerHTML = '<option value="">Pilih Jenis</option>';
+        if (memberData[nama]) {
+            Object.keys(memberData[nama]).forEach(jenis => {
+                if (memberData[nama][jenis] > 0) {
+                    selectJenis.innerHTML += `<option value="${jenis}">${jenis} (${memberData[nama][jenis].toFixed(4)} gr)</option>`;
+                }
+            });
+        }
+    }
+
+    function submitJual() {
+        const nama = document.getElementById('jualNama').value;
+        const jenis = document.getElementById('jualJenis').value;
+        const gram = document.getElementById('jualGram').value;
+        const script = document.createElement("script");
+        script.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+        document.body.appendChild(script);
+    }
+</script>
+    
     <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
 
