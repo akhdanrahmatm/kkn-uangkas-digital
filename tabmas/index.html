@@ -69,43 +69,34 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-3 mb-4">
-            <button onclick="openMemberView()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-4 bg-gradient-to-br from-[#F9F5E1] via-white to-[#F3E2A9] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#92400e] shadow-sm">
+        <!-- 4 Tombol Utama Sejajar -->
+        <div class="grid grid-cols-4 gap-2 mb-8">
+            <button onclick="openMemberView()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-1 bg-gradient-to-br from-[#F9F5E1] via-white to-[#F3E2A9] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#92400e] shadow-sm">
                     <i class="fa-solid fa-users text-sm"></i>
                 </div>
-                <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Anggota</span>
+                <span class="font-semibold text-[8px] uppercase tracking-wider">Anggota</span>
             </button>
 
-            <button onclick="openModalBeli()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-4 bg-gradient-to-br from-white via-[#E5E7EB] to-[#D1D5DB] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#1f2937] shadow-sm">
+            <button onclick="openModalBeli()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-1 bg-gradient-to-br from-white via-[#E5E7EB] to-[#D1D5DB] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#1f2937] shadow-sm">
                     <i class="fa-solid fa-arrow-trend-up text-sm"></i>
                 </div>
-                <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Beli</span>
+                <span class="font-semibold text-[8px] uppercase tracking-wider">Beli</span>
             </button>
 
-            <button onclick="openModalJual()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-4 bg-gradient-to-br from-[#FDE68A] via-[#FCD34D] to-[#FBBF24] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
-                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#D4AF37] shadow-sm">
+            <button onclick="openModalJual()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-1 bg-gradient-to-br from-[#FDE68A] via-[#FCD34D] to-[#FBBF24] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#D4AF37] shadow-sm">
                     <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
                 </div>
-                <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Jual</span>
+                <span class="font-semibold text-[8px] uppercase tracking-wider">Jual</span>
             </button>
-        </div>
 
-        <div class="mb-8">
-            <button onclick="openEStatementView()" class="w-full bg-white border border-gray-100 rounded-[24px] p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-all duration-200 group">
-                <div class="flex items-center gap-4">
-                    <div class="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                        <i class="fa-solid fa-file-invoice text-lg"></i>
-                    </div>
-                    <div class="text-left">
-                        <h4 class="text-sm font-bold text-gray-900">E-Statement</h4>
-                        <p class="text-[10px] text-gray-500 uppercase tracking-wider mt-0.5">Riwayat Per Bulan & Anggota</p>
-                    </div>
+            <button onclick="openEStatementView()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-1 bg-gradient-to-br from-[#EFF6FF] via-[#DBEAFE] to-[#BFDBFE] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                    <i class="fa-solid fa-file-invoice text-sm"></i>
                 </div>
-                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                </div>
+                <span class="font-semibold text-[8px] uppercase tracking-wider">E-Stat</span>
             </button>
         </div>
 
@@ -117,6 +108,7 @@
         </div>
     </div>
 
+    <!-- Halaman Tampilan Anggota -->
     <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -133,6 +125,7 @@
         <div id="memberDots" class="flex items-center justify-center gap-2 mt-2"></div>
     </div>
 
+    <!-- Halaman E-Statement -->
     <div id="eStatementScreen" class="max-w-md mx-auto px-5 py-8 hidden animate-fade-in-up">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -144,6 +137,7 @@
             </button>
         </div>
 
+        <!-- Filter Dropdown -->
         <div class="space-y-3 mb-8">
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -178,6 +172,7 @@
         </div>
     </div>
 
+    <!-- Modal Beli -->
     <div id="modalBeli" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center pb-0 sm:p-4 transition-all duration-300">
         <div class="bg-white w-full max-w-md rounded-t-[35px] sm:rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
             <button onclick="closeModalBeli()" class="absolute top-6 right-6 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
@@ -215,6 +210,7 @@
         </div>
     </div>
 
+    <!-- Modal Jual -->
     <div id="modalJual" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center pb-0 sm:p-4 transition-all duration-300">
         <div class="bg-white w-full max-w-md rounded-t-[35px] sm:rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
             <button onclick="closeModalJual()" class="absolute top-6 right-6 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
@@ -255,7 +251,7 @@
         
         let memberData = {};
         let memberSliderListenerAdded = false;
-        let allTransactionsData = []; // Menyimpan semua riwayat transaksi untuk filter E-Statement
+        let allTransactionsData = []; 
 
         function loadDashboard() {
             const script = document.createElement("script");
@@ -263,7 +259,6 @@
             document.body.appendChild(script);
         }
 
-        // Fungsi ekstrak bulan yang sangat kebal (robust)
         function extractMonth(dateString) {
             if (!dateString) return "Bulan Tidak Diketahui";
             const d = new Date(dateString);
@@ -272,7 +267,6 @@
                 return months[d.getMonth()] + " " + d.getFullYear();
             }
             
-            // Fallback: mencari singkatan bulan dari teks secara manual (seperti format "13 JUN")
             const str = dateString.toString().toUpperCase();
             if (str.includes('JAN')) return 'Januari';
             if (str.includes('FEB')) return 'Februari';
@@ -293,7 +287,6 @@
         function renderData(data) {
             document.getElementById("balance-total").innerText = data.totalGram + " gr";
             
-            // --- BAGIAN ANGGOTA (TIDAK ADA YANG DIUBAH) ---
             const container = document.getElementById("user-list");
             container.innerHTML = "";
             if (!data.users || data.users.length === 0) {
@@ -313,12 +306,10 @@
                 });
             }
 
-            // --- BAGIAN RIWAYAT DASHBOARD (HANYA DITAMPILKAN 7 DATA) ---
             allTransactionsData = data.transactions || [];
             const transContainer = document.getElementById("transaction-list");
             transContainer.innerHTML = "";
             
-            // Potong array transaksi hanya mengambil 7 teratas
             const recentTrans = allTransactionsData.slice(0, 7); 
             
             if (recentTrans.length > 0) {
@@ -346,10 +337,8 @@
                 transContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Tidak ada transaksi baru.</p>`;
             }
 
-            // --- BAGIAN PERSIAPAN E-STATEMENT ---
             setupEStatementFilters(data);
 
-            // --- SLIDER ANGGOTA (TIDAK DIUBAH) ---
             const slider = document.getElementById('memberSlider');
             const dots = document.getElementById('memberDots');
             dots.innerHTML = '';
@@ -372,12 +361,10 @@
             }
         }
 
-        // --- SISTEM E-STATEMENT BARU ---
         function setupEStatementFilters(data) {
             const userSelect = document.getElementById('filterUser');
             const monthSelect = document.getElementById('filterBulan');
 
-            // 1. Masukkan semua user ke dropdown E-Statement
             let userOptions = '<option value="ALL">Semua Anggota</option>';
             if (data.users) {
                 data.users.forEach(u => {
@@ -386,7 +373,6 @@
             }
             userSelect.innerHTML = userOptions;
 
-            // 2. Ekstrak & Masukkan semua bulan dari riwayat ke dropdown
             let monthsSet = new Set();
             allTransactionsData.forEach(t => {
                 monthsSet.add(extractMonth(t.date));
@@ -398,7 +384,6 @@
             });
             monthSelect.innerHTML = monthOptions;
 
-            // Render awal list E-Statement
             filterEStatement();
         }
 
@@ -408,14 +393,12 @@
             const container = document.getElementById('estatement-list');
             const heading = document.getElementById('estatement-heading');
 
-            // Ganti Judul Sesuai Bulan
             if (selectedMonth === "ALL") {
                 heading.innerText = "TRANSAKSI KESELURUHAN";
             } else {
                 heading.innerText = `TRANSAKSI ${selectedMonth.toUpperCase()}`;
             }
 
-            // Lakukan Filter Data
             let filteredData = allTransactionsData.filter(t => {
                 let matchUser = (selectedUser === "ALL") || (t.name === selectedUser);
                 let matchMonth = (selectedMonth === "ALL") || (extractMonth(t.date) === selectedMonth);
@@ -452,7 +435,6 @@
         function openEStatementView() {
             document.getElementById('dashboardView').classList.add('hidden');
             document.getElementById('eStatementScreen').classList.remove('hidden');
-            // Pastikan data terakhir dirender sesuai pilihan dropdown saat ini
             filterEStatement(); 
         }
 
@@ -461,7 +443,6 @@
             document.getElementById('dashboardView').classList.remove('hidden');
         }
 
-        // --- FUNGSI BAWAAN YANG SUDAH ADA (TIDAK DIUBAH) ---
         function openModalBeli() { document.getElementById('modalBeli').classList.remove('hidden'); }
         function closeModalBeli() { document.getElementById('modalBeli').classList.add('hidden'); }
         function openMemberView() {
