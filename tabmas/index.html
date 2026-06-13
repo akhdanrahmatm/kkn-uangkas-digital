@@ -69,7 +69,6 @@
             </div>
         </div>
 
-        <!-- 4 Tombol Utama Sejajar -->
         <div class="grid grid-cols-4 gap-2 mb-8">
             <button onclick="openMemberView()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-1 bg-gradient-to-br from-[#F9F5E1] via-white to-[#F3E2A9] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
                 <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#92400e] shadow-sm">
@@ -108,7 +107,6 @@
         </div>
     </div>
 
-    <!-- Halaman Tampilan Anggota -->
     <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -119,13 +117,15 @@
                 <i class="fa-solid fa-arrow-left text-lg"></i>
             </button>
         </div>
+        
         <div class="overflow-x-auto pb-4 -mx-5 px-5 snap-x snap-mandatory hide-scrollbar" id="memberSlider">
             <div id="user-list" class="flex gap-4"></div>
         </div>
         <div id="memberDots" class="flex items-center justify-center gap-2 mt-2"></div>
+
+        <div id="memberStats" class="mt-8 mb-4"></div>
     </div>
 
-    <!-- Halaman E-Statement -->
     <div id="eStatementScreen" class="max-w-md mx-auto px-5 py-8 hidden animate-fade-in-up">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -137,7 +137,6 @@
             </button>
         </div>
 
-        <!-- Filter Dropdown -->
         <div class="space-y-3 mb-8">
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -172,7 +171,6 @@
         </div>
     </div>
 
-    <!-- Modal Beli -->
     <div id="modalBeli" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center pb-0 sm:p-4 transition-all duration-300">
         <div class="bg-white w-full max-w-md rounded-t-[35px] sm:rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
             <button onclick="closeModalBeli()" class="absolute top-6 right-6 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
@@ -210,7 +208,6 @@
         </div>
     </div>
 
-    <!-- Modal Jual -->
     <div id="modalJual" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center pb-0 sm:p-4 transition-all duration-300">
         <div class="bg-white w-full max-w-md rounded-t-[35px] sm:rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
             <button onclick="closeModalJual()" class="absolute top-6 right-6 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
@@ -289,12 +286,27 @@
             
             const container = document.getElementById("user-list");
             container.innerHTML = "";
+            
+            // Variabel untuk menghitung persentase bar chart
+            let localTotalGram = 0;
+            let maxGram = 0;
+            let topUser = "";
+
             if (!data.users || data.users.length === 0) {
                 container.innerHTML = `<div class="bg-white p-6 rounded-2xl border border-gray-100 text-center min-w-full"><p class="text-gray-400 text-sm">Belum ada data tabungan.</p></div>`;
             } else {
+                // Menghitung total dan mencari pemilik terbanyak untuk visual bar
                 data.users.forEach(user => {
+                    let g = Number(user.gram);
+                    localTotalGram += g;
+                    if (g > maxGram) {
+                        maxGram = g;
+                        topUser = user.name;
+                    }
+
+                    // PERUBAHAN: Dihapus shadow-2xl agar flat, tetapi desain cardless tetap ada
                     container.innerHTML += `
-                    <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden shadow-2xl border border-white/50 text-gray-900">
+                    <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden border border-white/50 text-gray-900 shadow-none">
                         <div class="absolute -right-12 -top-12 w-24 h-24 bg-white opacity-40 rounded-full blur-md"></div>
                         <p class="text-[#5C4308] text-[10px] font-semibold uppercase tracking-[0.2em] relative z-10">Nama Anggota</p>
                         <p class="text-base font-semibold mt-2 relative z-10 leading-tight text-gray-900">${user.name}</p>
@@ -304,6 +316,48 @@
                         </div>
                     </div>`;
                 });
+
+                // PERUBAHAN: Menyusun Bar Proporsi Kepemilikan Emas
+                let stackedBarHtml = `<div class="flex w-full h-3 rounded-full overflow-hidden bg-gray-100 mt-2">`;
+                let legendHtml = `<div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 justify-start px-1">`;
+                
+                // Kombinasi palet warna selain pemenang pertama (Hitam, Gold, Abu-abu tua)
+                const palette = ['bg-gray-900', 'bg-[#E6C27A]', 'bg-gray-700', 'bg-[#FCEABB]', 'bg-black'];
+                let colorIndex = 0;
+
+                data.users.forEach(user => {
+                    let uGram = Number(user.gram);
+                    let percent = localTotalGram > 0 ? (uGram / localTotalGram) * 100 : 0;
+                    let bgColor = "";
+
+                    // Warna khusus gold pekat jika anggota punya tabungan paling banyak
+                    if (user.name === topUser) {
+                        bgColor = "bg-[#D4AF37]"; 
+                    } else {
+                        // Warnanya selang-seling untuk anggota lainnya
+                        bgColor = palette[colorIndex % palette.length];
+                        colorIndex++;
+                    }
+
+                    if (percent > 0) {
+                        stackedBarHtml += `<div class="${bgColor} h-full transition-all duration-500" style="width: ${percent}%"></div>`;
+                    }
+                    legendHtml += `
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full ${bgColor}"></div>
+                            <span class="text-[10px] font-semibold text-gray-600">${user.name} <span class="text-gray-400">(${percent.toFixed(1)}%)</span></span>
+                        </div>
+                    `;
+                });
+
+                stackedBarHtml += `</div>`;
+                legendHtml += `</div>`;
+
+                document.getElementById('memberStats').innerHTML = `
+                    <h4 class="text-xs font-bold text-gray-900 mb-1 uppercase tracking-wider px-1">Porsi Kepemilikan Emas</h4>
+                    ${stackedBarHtml}
+                    ${legendHtml}
+                `;
             }
 
             allTransactionsData = data.transactions || [];
