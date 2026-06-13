@@ -91,6 +91,13 @@
                 <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Jual</span>
             </button>
         </div>
+
+        <div class="mt-2 mb-8">
+            <h3 class="text-sm font-bold text-gray-900 mb-4 px-1 uppercase tracking-wider">Riwayat 7 Hari</h3>
+            <div id="transaction-list" class="space-y-3">
+                <p class="text-xs text-gray-400 text-center py-4">Memuat riwayat...</p>
+            </div>
+        </div>
     </div>
 
     <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
@@ -183,16 +190,11 @@
 
 
     <script>
-        // PASTIKAN URL INI SESUAI DENGAN DEPLOY TERBARU ANDA
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
         
-        // Simpan data anggota untuk dropdown Jual
         let memberData = {};
         let memberSliderListenerAdded = false;
 
-        // -----------------------------------------
-        // 1. FUNGSI DASHBOARD UTAMA
-        // -----------------------------------------
         function loadDashboard() {
             const script = document.createElement("script");
             script.src = `${SCRIPT_URL}?callback=renderData`;
@@ -206,125 +208,111 @@
             
             if (!data.users || data.users.length === 0) {
                 container.innerHTML = `<div class="bg-white p-6 rounded-2xl border border-gray-100 text-center min-w-full"><p class="text-gray-400 text-sm">Belum ada data tabungan.</p></div>`;
-                return;
+            } else {
+                data.users.forEach(user => {
+                    container.innerHTML += `
+                    <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden shadow-2xl border border-white/50 text-gray-900">
+                        <div class="absolute -right-12 -top-12 w-24 h-24 bg-white opacity-40 rounded-full blur-md"></div>
+                        <p class="text-[#5C4308] text-[10px] font-semibold uppercase tracking-[0.2em] relative z-10">Nama Anggota</p>
+                        <p class="text-base font-semibold mt-2 relative z-10 leading-tight text-gray-900">${user.name}</p>
+                        <h2 class="text-4xl font-bold mt-5 relative z-10 leading-tight">${Number(user.gram).toFixed(4)} gr</h2>
+                        <div class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/70 border border-white/80 mt-4 text-[11px] font-semibold text-[#5C4308] relative z-10 shadow-sm">
+                            <span>Saldo Gram</span>
+                        </div>
+                    </div>`;
+                });
             }
 
-            data.users.forEach(user => {
-                container.innerHTML += `
-                <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden shadow-2xl border border-white/50 text-gray-900">
-                    <div class="absolute -right-12 -top-12 w-24 h-24 bg-white opacity-40 rounded-full blur-md"></div>
-                    <p class="text-[#5C4308] text-[10px] font-semibold uppercase tracking-[0.2em] relative z-10">Nama Anggota</p>
-                    <p class="text-base font-semibold mt-2 relative z-10 leading-tight text-gray-900">${user.name}</p>
-                    <h2 class="text-4xl font-bold mt-5 relative z-10 leading-tight">${Number(user.gram).toFixed(4)} gr</h2>
-                    <div class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/70 border border-white/80 mt-4 text-[11px] font-semibold text-[#5C4308] relative z-10 shadow-sm">
-                        <span>Saldo Gram</span>
-                    </div>
-                </div>`;
-            });
+            const transContainer = document.getElementById("transaction-list");
+            transContainer.innerHTML = "";
+            if (data.transactions && data.transactions.length > 0) {
+                data.transactions.forEach(t => {
+                    const isBeli = t.type === 'BELI';
+                    transContainer.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full ${isBeli ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} flex items-center justify-center">
+                                <i class="fa-solid ${isBeli ? 'fa-arrow-down' : 'fa-arrow-up'} text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-900">${t.name}</p>
+                                <p class="text-[9px] text-gray-400 uppercase">${t.gold} • ${t.date}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold ${isBeli ? 'text-emerald-600' : 'text-rose-600'}">
+                                ${isBeli ? '+' : '-'}${Number(t.gram).toFixed(4)} gr
+                            </p>
+                        </div>
+                    </div>`;
+                });
+            } else {
+                transContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Tidak ada transaksi baru.</p>`;
+            }
+
             const slider = document.getElementById('memberSlider');
             const dots = document.getElementById('memberDots');
             dots.innerHTML = '';
             data.users.forEach((_, index) => {
                 const dot = document.createElement('span');
                 dot.className = 'w-2.5 h-2.5 rounded-full bg-gray-300';
-                dot.dataset.index = index;
                 dots.appendChild(dot);
             });
             const updateActiveDot = () => {
-                const cards = container.querySelectorAll('.snap-start');
                 const scrollLeft = slider.scrollLeft;
                 const width = slider.clientWidth;
-                let active = 0;
-                cards.forEach((card, idx) => {
-                    const cardLeft = card.offsetLeft;
-                    if (scrollLeft + width / 2 >= cardLeft) active = idx;
-                });
+                const active = Math.round(scrollLeft / width);
                 dots.querySelectorAll('span').forEach((dot, idx) => {
                     dot.className = idx === active ? 'w-2.5 h-2.5 rounded-full bg-[#D4AF37]' : 'w-2.5 h-2.5 rounded-full bg-gray-300';
                 });
             };
-            updateActiveDot();
             if (!memberSliderListenerAdded) {
                 slider.addEventListener('scroll', updateActiveDot);
                 memberSliderListenerAdded = true;
             }
         }
 
-        // -----------------------------------------
-        // 2. FUNGSI BELI EMAS
-        // -----------------------------------------
-        function openModalBeli() { 
-            document.getElementById('modalBeli').classList.remove('hidden'); 
-        }
-        
-        function closeModalBeli() { 
-            document.getElementById('modalBeli').classList.add('hidden');
-            document.getElementById('inputNama').value = "";
-            document.getElementById('inputGram').value = "";
-        }
-
+        function openModalBeli() { document.getElementById('modalBeli').classList.remove('hidden'); }
+        function closeModalBeli() { document.getElementById('modalBeli').classList.add('hidden'); }
         function openMemberView() {
             document.getElementById('dashboardView').classList.add('hidden');
             document.getElementById('memberScreen').classList.remove('hidden');
-            loadDashboard();
         }
-
         function closeMemberView() {
             document.getElementById('memberScreen').classList.add('hidden');
             document.getElementById('dashboardView').classList.remove('hidden');
         }
-
         function submitBeli() {
             const nama = document.getElementById('inputNama').value.trim();
             const jenis = document.getElementById('inputJenis').value;
             const gram = document.getElementById('inputGram').value;
             const btn = document.getElementById('btnSubmitBeli');
-
             if(!nama || !gram) return alert("Mohon isi Nama Anggota dan Jumlah Gram!");
-
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
             btn.disabled = true;
-
             const script = document.createElement("script");
             script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
             document.body.appendChild(script);
         }
-
-
-        // -----------------------------------------
-        // 3. FUNGSI JUAL EMAS
-        // -----------------------------------------
         function openModalJual() {
             document.getElementById('modalJual').classList.remove('hidden');
-            const selectNama = document.getElementById('jualNama');
-            selectNama.innerHTML = '<option value="">Sedang mengambil data...</option>';
-            
-            // Mengambil data anggota dari Spreadsheet
             const script = document.createElement("script");
             script.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`;
             document.body.appendChild(script);
         }
-
-        function closeModalJual() {
-            document.getElementById('modalJual').classList.add('hidden');
-            document.getElementById('jualGram').value = "";
-        }
-
+        function closeModalJual() { document.getElementById('modalJual').classList.add('hidden'); }
         function initJual(data) {
             memberData = data; 
             const select = document.getElementById('jualNama');
             select.innerHTML = '<option value="">Pilih Anggota</option>';
-            
             Object.keys(data).forEach(name => {
                 select.innerHTML += `<option value="${name}">${name}</option>`;
             });
         }
-
         function updateJenisJual() {
             const nama = document.getElementById('jualNama').value;
             const selectJenis = document.getElementById('jualJenis');
             selectJenis.innerHTML = '<option value="">Pilih Jenis Emas</option>';
-            
             if (memberData[nama]) {
                 Object.keys(memberData[nama]).forEach(jenis => {
                     const saldoJenis = memberData[nama][jenis];
@@ -334,37 +322,24 @@
                 });
             }
         }
-
         function submitJual() {
             const nama = document.getElementById('jualNama').value;
             const jenis = document.getElementById('jualJenis').value;
             const gram = document.getElementById('jualGram').value;
             const btn = document.getElementById('btnSubmitJual');
-
             if(!nama || !jenis || !gram) return alert("Mohon lengkapi pilihan Anggota, Jenis Emas, dan Jumlah Jual!");
-
-            if(Number(gram) > memberData[nama][jenis]) {
-                return alert(`Saldo tidak cukup! Maksimal yang bisa dijual: ${memberData[nama][jenis]} gr.`);
-            }
-
+            if(Number(gram) > memberData[nama][jenis]) return alert(`Saldo tidak cukup! Maksimal: ${memberData[nama][jenis]} gr.`);
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
             btn.disabled = true;
-
             const script = document.createElement("script");
             script.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
             document.body.appendChild(script);
         }
-
-        // -----------------------------------------
-        // 4. KONTROL UMUM
-        // -----------------------------------------
         function onSuccessSubmit() {
             alert("Transaksi Berhasil Dicatat!");
             location.reload(); 
         }
-
         window.onload = loadDashboard;
-        
     </script>
 </body>
 </html>
