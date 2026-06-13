@@ -52,41 +52,24 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
+        let memberData = {};
         
         function loadDashboard() {
-            const s = document.createElement("script");
-            s.src = `${SCRIPT_URL}?callback=renderData`;
-            document.body.appendChild(s);
+            const script = document.createElement("script");
+            script.src = `${SCRIPT_URL}?callback=renderData`;
+            document.body.appendChild(script);
         }
 
         function renderData(data) {
             document.getElementById("balance-total").innerText = data.totalGram + " gr";
+            // Render transaksi 7 terakhir
             renderTransactionList((data.transactions || []).slice(0, 7), "Transaksi Terbaru");
-        }
-
-        function openModalBulan() {
-            // Ambil daftar bulan yang ada di data (Mockup/bisa disesuaikan dengan logic mapping)
-            const list = document.getElementById('listBulan');
-            list.innerHTML = `<button onclick="loadMonthly('04')" class="w-full p-3 bg-gray-50 rounded-xl font-bold">April</button>
-                              <button onclick="loadMonthly('05')" class="w-full p-3 bg-gray-50 rounded-xl font-bold">Mei</button>
-                              <button onclick="loadMonthly('06')" class="w-full p-3 bg-gray-50 rounded-xl font-bold">Juni</button>`;
-            document.getElementById('modalBulan').classList.remove('hidden');
-        }
-
-        function loadMonthly(m) {
-            const s = document.createElement("script");
-            s.src = `${SCRIPT_URL}?action=getMonthlyTransactions&month=${m}&callback=showFullTrans`;
-            document.body.appendChild(s);
-        }
-
-        function showFullTrans(data) {
-            renderTransactionList(data, "Semua Transaksi");
-            document.getElementById('modalBulan').classList.add('hidden');
         }
 
         function renderTransactionList(list, title) {
             const container = document.getElementById("transaction-list");
             container.innerHTML = `<h4 class="text-[10px] text-gray-400 mb-2 uppercase">${title}</h4>`;
+            if (list.length === 0) container.innerHTML += `<p class="text-xs text-gray-400 text-center py-4">Tidak ada data.</p>`;
             list.forEach(t => {
                 const isBeli = t.type === 'BELI';
                 container.innerHTML += `
@@ -96,9 +79,73 @@
                 </div>`;
             });
         }
-        
-        // Tambahkan fungsi pendukung lain (openModalBeli, dll) di sini...
+
+        // --- FUNGSI MENU UTAMA ---
+        function openMemberView() { 
+            document.getElementById('dashboardView').classList.add('hidden'); 
+            document.getElementById('memberScreen').classList.remove('hidden'); 
+        }
+        function closeMemberView() { 
+            document.getElementById('memberScreen').classList.add('hidden'); 
+            document.getElementById('dashboardView').classList.remove('hidden'); 
+        }
+
+        // --- FUNGSI MODAL BELI ---
+        function openModalBeli() { document.getElementById('modalBeli').classList.remove('hidden'); }
+        function closeModalBeli() { document.getElementById('modalBeli').classList.add('hidden'); }
+        function submitBeli() {
+            const nama = document.getElementById('inputNama').value.trim();
+            const jenis = document.getElementById('inputJenis').value;
+            const gram = document.getElementById('inputGram').value;
+            if(!nama || !gram) return alert("Isi semua data!");
+            const s = document.createElement("script");
+            s.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+            document.body.appendChild(s);
+        }
+
+        // --- FUNGSI MODAL JUAL ---
+        function openModalJual() { 
+            document.getElementById('modalJual').classList.remove('hidden'); 
+            const s = document.createElement("script");
+            s.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`;
+            document.body.appendChild(s);
+        }
+        function closeModalJual() { document.getElementById('modalJual').classList.add('hidden'); }
+        function initJual(data) { 
+            memberData = data; 
+            const select = document.getElementById('jualNama');
+            select.innerHTML = '<option value="">Pilih Anggota</option>';
+            Object.keys(data).forEach(n => select.innerHTML += `<option value="${n}">${n}</option>`);
+        }
+        function updateJenisJual() {
+            const n = document.getElementById('jualNama').value;
+            const s = document.getElementById('jualJenis');
+            s.innerHTML = '<option value="">Pilih Jenis</option>';
+            if(memberData[n]) Object.keys(memberData[n]).forEach(j => s.innerHTML += `<option value="${j}">${j}</option>');
+        }
+        function submitJual() {
+            const n = document.getElementById('jualNama').value;
+            const j = document.getElementById('jualJenis').value;
+            const g = document.getElementById('jualGram').value;
+            if(!n || !j || !g) return alert("Lengkapi data!");
+            const s = document.createElement("script");
+            s.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(n)}&jenis=${encodeURIComponent(j)}&gram=${encodeURIComponent(g)}&callback=onSuccessSubmit`;
+            document.body.appendChild(s);
+        }
+
+        // --- FUNGSI E-STATEMENT ---
+        function openModalBulan() { document.getElementById('modalBulan').classList.remove('hidden'); }
+        function loadMonthly(m) {
+            const s = document.createElement("script");
+            s.src = `${SCRIPT_URL}?action=getMonthlyTransactions&month=${m}&callback=showFullTrans`;
+            document.body.appendChild(s);
+        }
+        function showFullTrans(data) {
+            renderTransactionList(data, "Semua Transaksi");
+            document.getElementById('modalBulan').classList.add('hidden');
+        }
+
+        function onSuccessSubmit() { alert("Berhasil!"); location.reload(); }
         window.onload = loadDashboard;
-    </script>
-</body>
+    </script></body>
 </html>
