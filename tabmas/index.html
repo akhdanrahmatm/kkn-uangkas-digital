@@ -1,121 +1,173 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabungan Emas Kita</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        body { min-height: 100vh; background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 50%, #f9f6ea 100%); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05); }
-        .glass-card { background: #ffffff; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.08), inset 0 1px rgba(255, 255, 255, 1); }
-        .gold-premium-card { background: linear-gradient(135deg, #E6C27A 0%, #FCEABB 45%, #D4AF37 100%); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .text-gold { color: #d4af37; }
-        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabungan Emas Kita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { min-height: 100vh; background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 50%, #f9f6ea 100%); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05); }
+        .glass-card { background: #ffffff; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.08), inset 0 1px rgba(255, 255, 255, 1); }
+        .gold-premium-card { background: linear-gradient(135deg, #E6C27A 0%, #FCEABB 45%, #D4AF37 100%); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .text-gold { color: #d4af37; }
+        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
-    <div class="max-w-md mx-auto px-5 py-8">
-        <div class="gold-premium-card rounded-[35px] px-6 pt-6 pb-8 mb-8 relative">
-            <h2 id="balance-idr" class="text-4xl font-bold text-gray-900 mt-2">Loading...</h2>
-            <div class="flex justify-between items-center mt-8">
-                <button onclick="openModal()" class="flex flex-col items-center gap-2"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white"><i class="fa-solid fa-arrow-trend-up"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Beli</span></button>
-                <button onclick="openJualModal()" class="flex flex-col items-center gap-2"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white"><i class="fa-solid fa-hand-holding-dollar"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Jual</span></button>
-            </div>
-        </div>
-        <div id="user-list" class="space-y-3"></div>
-    </div>
+    <div class="max-w-md mx-auto px-5 py-8">
+        <div class="mb-8 flex justify-between items-center">
+            <span class="inline-flex items-center px-4 py-2 rounded-full glass text-sm font-semibold text-gold">✨ Smart Gold Saving</span>
+            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"><i class="fa-regular fa-bell text-gray-500"></i></div>
+        </div>
 
-    <div id="modalTambah" class="fixed inset-0 bg-black/40 hidden z-50 flex justify-center items-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[30px] p-8 relative">
-            <h3 class="text-2xl font-bold mb-4">Beli Emas</h3>
-            <input type="text" id="inputNama" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-3" placeholder="Nama Anggota">
-            <select id="inputJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-3"><option>Antam</option><option>UBS</option><option>Galeri24</option></select>
-            <input type="number" id="inputGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-3" placeholder="Gram">
-            <button onclick="submitForm()" id="btnSubmit" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl">Konfirmasi Beli</button>
-        </div>
-    </div>
+        <div class="gold-premium-card rounded-[35px] px-6 pt-6 pb-8 mb-8 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-32 h-32 bg-white opacity-40 rounded-full blur-md"></div>
+            <p class="text-[#5C4308] text-sm font-semibold relative z-10 uppercase tracking-wider">Total Nilai Tabungan</p>
+            <h2 id="balance-idr" class="text-4xl font-bold text-gray-900 mt-2 relative z-10 drop-shadow-sm">Loading...</h2>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/40 backdrop-blur-sm border border-white/60 mt-4 text-xs font-bold text-[#5C4308] relative z-10 shadow-sm">🪙 Tabungan Emas Digital</div>
+            
+            <div class="flex justify-between items-center mt-8 relative z-10 px-1">
+                <button onclick="openModal()" class="flex flex-col items-center gap-2 group"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-arrow-trend-up"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Beli</span></button>
+                <button class="flex flex-col items-center gap-2 group"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-hand-holding-dollar"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Jual</span></button>
+                <button class="flex flex-col items-center gap-2 group"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-receipt"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Riwayat</span></button>
+                <button class="flex flex-col items-center gap-2 group"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-bullseye"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Target</span></button>
+            </div>
+        </div>
 
-    <div id="modalJual" class="fixed inset-0 bg-black/40 hidden z-50 flex justify-center items-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[30px] p-8 relative">
-            <h3 class="text-2xl font-bold mb-4">Jual Emas</h3>
-            <select id="jualNama" onchange="updateJenisJual()" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-3"><option value="">Pilih Anggota</option></select>
-            <select id="jualJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-3"><option value="">Pilih Jenis</option></select>
-            <input type="number" id="jualGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-3" placeholder="Jumlah (gr)">
-            <button onclick="submitJual()" class="w-full bg-red-600 text-white font-bold py-4 rounded-2xl">Jual Sekarang</button>
-        </div>
-    </div>
+        <div id="user-list" class="space-y-3"></div>
+    </div>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
-        let memberData = {};
+    <div id="modalTambah" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Beli Emas</h3>
+            <div class="space-y-4">
+                <input type="text" id="inputNama" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Nama Anggota">
+                <select id="inputJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4">
+                    <option value="Antam">Antam</option>
+                    <option value="UBS">UBS</option>
+                    <option value="Galeri24">Galeri24</option>
+                    <option value="Lokal">Lokal</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+                <input type="number" step="0.0001" id="inputGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Jumlah Gram">
+                <button onclick="submitForm()" id="btnSubmit" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl mt-4">Konfirmasi Pembelian Emas</button>
+            </div>
+        </div>
+    </div>
 
-        // --- DASHBOARD LOGIC ---
-        function loadDashboard() {
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?callback=renderData`;
-            document.body.appendChild(script);
-        }
+<div id="modalJual" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
+    <div class="bg-white w-full max-w-md rounded-[30px] p-8 shadow-2xl">
+        <h3 class="text-2xl font-bold mb-4">Jual Emas</h3>
+        <select id="jualNama" onchange="updateJenisJual()" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-4">
+            <option value="">Pilih Anggota</option>
+        </select>
+        <select id="jualJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4 mb-4">
+            <option value="">Pilih Jenis</option>
+        </select>
+        <input type="number" id="jualGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Jumlah (gr)">
+        <button onclick="submitJual()" class="w-full bg-red-600 text-white font-bold py-4 rounded-2xl mt-4">Jual Sekarang</button>
+        <button onclick="document.getElementById('modalJual').classList.add('hidden')" class="w-full text-gray-500 mt-2">Batal</button>
+    </div>
+</div>
 
-        function renderData(data) {
-            document.getElementById("balance-idr").innerText = data.totalGram + " gr";
-            const container = document.getElementById("user-list");
-            container.innerHTML = "";
-            data.users.forEach(user => {
-                container.innerHTML += `<div class="glass-card rounded-[25px] p-4 flex justify-between"><h4>${user.name}</h4><h4 class="font-bold text-gold">${user.gram} gr</h4></div>`;
-            });
-        }
+<button onclick="openJualModal()" class="flex flex-col items-center gap-2 group"><div class="w-14 h-14 bg-gray-900 rounded-[20px] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-hand-holding-dollar"></i></div><span class="text-[11px] font-bold text-[#5C4308]">Jual</span></button>
 
-        // --- BELI LOGIC ---
-        function openModal() { document.getElementById('modalTambah').classList.remove('hidden'); }
-        function submitForm() {
-            const nama = document.getElementById('inputNama').value;
-            const gram = document.getElementById('inputGram').value;
-            const jenis = document.getElementById('inputJenis').value;
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
-            document.body.appendChild(script);
-        }
+<script>
+    let memberData = {};
 
-        // --- JUAL LOGIC ---
-        async function openJualModal() {
-            document.getElementById('modalJual').classList.remove('hidden');
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`;
-            document.body.appendChild(script);
-        }
+    async function openJualModal() {
+        document.getElementById('modalJual').classList.remove('hidden');
+        const script = document.createElement("script");
+        script.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`;
+        document.body.appendChild(script);
+    }
 
-        function initJual(data) {
-            memberData = data;
-            const select = document.getElementById('jualNama');
-            select.innerHTML = '<option value="">Pilih Anggota</option>';
-            Object.keys(data).forEach(name => select.innerHTML += `<option value="${name}">${name}</option>`);
-        }
+    function initJual(data) {
+        memberData = data;
+        const select = document.getElementById('jualNama');
+        select.innerHTML = '<option value="">Pilih Anggota</option>';
+        Object.keys(data).forEach(name => {
+            select.innerHTML += `<option value="${name}">${name}</option>`;
+        });
+    }
 
-        function updateJenisJual() {
-            const nama = document.getElementById('jualNama').value;
-            const selectJenis = document.getElementById('jualJenis');
-            selectJenis.innerHTML = '<option value="">Pilih Jenis</option>';
-            if (memberData[nama]) {
-                Object.keys(memberData[nama]).forEach(jenis => {
-                    if (memberData[nama][jenis] > 0) selectJenis.innerHTML += `<option value="${jenis}">${jenis} (${memberData[nama][jenis].toFixed(2)} gr)</option>`;
-                });
-            }
-        }
+    function updateJenisJual() {
+        const nama = document.getElementById('jualNama').value;
+        const selectJenis = document.getElementById('jualJenis');
+        selectJenis.innerHTML = '<option value="">Pilih Jenis</option>';
+        if (memberData[nama]) {
+            Object.keys(memberData[nama]).forEach(jenis => {
+                if (memberData[nama][jenis] > 0) {
+                    selectJenis.innerHTML += `<option value="${jenis}">${jenis} (${memberData[nama][jenis].toFixed(4)} gr)</option>`;
+                }
+            });
+        }
+    }
 
-        function submitJual() {
-            const nama = document.getElementById('jualNama').value;
-            const jenis = document.getElementById('jualJenis').value;
-            const gram = document.getElementById('jualGram').value;
-            const script = document.createElement("script");
-            script.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
-            document.body.appendChild(script);
-        }
+    function submitJual() {
+        const nama = document.getElementById('jualNama').value;
+        const jenis = document.getElementById('jualJenis').value;
+        const gram = document.getElementById('jualGram').value;
+        const script = document.createElement("script");
+        script.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+        document.body.appendChild(script);
+    }
+</script>
+    
+    <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
 
-        function onSuccessSubmit() { location.reload(); }
-        window.onload = loadDashboard;
-    </script>
+    function loadDashboard() {
+        const script = document.createElement("script");
+        // Kita gunakan JSONP untuk loading data agar tidak kena CORS
+        script.src = `${SCRIPT_URL}?callback=renderData`;
+        document.body.appendChild(script);
+    }
+
+    function renderData(data) {
+        document.getElementById("balance-idr").innerText = data.totalGram + " gr";
+        const container = document.getElementById("user-list");
+        container.innerHTML = "";
+        data.users.forEach(user => {
+            container.innerHTML += `
+            <div class="glass-card rounded-[25px] p-4 flex justify-between items-center">
+                <h4 class="font-semibold">${user.name}</h4>
+                <h4 class="font-bold text-gold">${user.gram} gr</h4>
+            </div>`;
+        });
+    }
+
+    function openModal() { document.getElementById('modalTambah').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('modalTambah').classList.add('hidden'); }
+
+    // Gunakan JSONP (callback) agar selaras dengan Code.gs Anda
+    function submitForm() {
+        const nama = document.getElementById('inputNama').value;
+        const gram = document.getElementById('inputGram').value;
+        const jenis = document.getElementById('inputJenis').value;
+        const btn = document.getElementById('btnSubmit');
+
+        if(!nama || !gram) return alert("Mohon isi semua data!");
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+        btn.disabled = true;
+
+        const script = document.createElement("script");
+        // Panggil script dengan callback agar bisa diproses oleh ContentService di Google
+        script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+        document.body.appendChild(script);
+    }
+
+    function onSuccessSubmit() {
+        alert("Berhasil dicatat!");
+        location.reload();
+    }
+
+    window.onload = loadDashboard;
+</script>
 </body>
 </html>
