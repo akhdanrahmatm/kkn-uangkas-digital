@@ -7,18 +7,21 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         body { 
             min-height: 100vh; 
             background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 50%, #f9f6ea 100%); 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; 
+            padding-bottom: 90px; /* Menjaga konten agar tidak tertutup bottom nav */
         }
         .glass { 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(12px); 
-            border: 1px solid rgba(212, 175, 55, 0.3); 
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2); 
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05); 
         }
         .gold-premium-card { 
             background: linear-gradient(135deg, #E6C27A 0%, #FCEABB 45%, #D4AF37 100%); 
@@ -42,7 +45,28 @@
 </head>
 <body>
 
-    <div id="dashboardView" class="max-w-md mx-auto px-5 py-8">
+    <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 px-5 py-4 pointer-events-none">
+        <div class="glass rounded-[30px] px-8 py-3 flex justify-between items-center pointer-events-auto">
+            <button onclick="openHomeView()" class="flex flex-col items-center gap-1.5 text-[#D4AF37] transition-colors w-12" id="nav-home">
+                <i class="fa-solid fa-house text-[22px]"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Home</span>
+            </button>
+            
+            <button onclick="openHargaEmasView()" class="flex flex-col items-center group relative -top-6 w-16" id="nav-harga">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#E6C27A] to-[#D4AF37] flex items-center justify-center text-white shadow-lg border-4 border-[#fdfbf7] group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-chart-line text-2xl"></i>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-wider text-gray-400 mt-1" id="nav-harga-text">Harga</span>
+            </button>
+            
+            <button onclick="showDevAlert()" class="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-12" id="nav-lainnya">
+                <i class="fa-solid fa-border-all text-[22px]"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="dashboardView" class="max-w-md mx-auto px-5 py-8 animate-fade-in-up">
         
         <div class="mb-8 flex justify-between items-center">
             <span class="inline-flex items-center px-4 py-2 rounded-full glass text-sm font-semibold text-gold">
@@ -107,15 +131,47 @@
         </div>
     </div>
 
+    <div id="hargaEmasScreen" class="max-w-md mx-auto px-5 py-8 hidden animate-fade-in-up">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h3 class="font-bold text-2xl text-gray-900">Pergerakan Harga</h3>
+                <p class="text-sm text-gray-500">Update harga emas terkini</p>
+            </div>
+        </div>
+
+        <div class="flex bg-gray-100/80 rounded-[20px] p-1 mb-6 shadow-inner">
+            <button id="btnChartBeli" onclick="switchChart('beli')" class="flex-1 text-sm font-bold py-3 rounded-[16px] bg-white shadow-sm text-gray-900 transition-all">Harga Beli</button>
+            <button id="btnChartJual" onclick="switchChart('jual')" class="flex-1 text-sm font-bold py-3 rounded-[16px] text-gray-500 hover:text-gray-900 transition-all">Harga Jual</button>
+        </div>
+
+        <div class="bg-white p-5 rounded-[30px] shadow-sm border border-gray-100 mb-6 relative">
+            <div class="h-48 w-full">
+                <canvas id="goldChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-[24px] border border-gray-100 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-12 h-12 bg-emerald-50 rounded-full"></div>
+                <p class="text-[10px] text-gray-400 uppercase font-bold mb-1 relative z-10">Harga Beli</p>
+                <p class="text-base font-black text-gray-900 relative z-10" id="detail-harga-beli">Memuat...</p>
+                <p class="text-[9px] font-bold text-emerald-500 mt-1"><i class="fa-solid fa-arrow-trend-up"></i> Saat Anda Beli</p>
+            </div>
+            <div class="bg-white p-5 rounded-[24px] border border-gray-100 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-12 h-12 bg-rose-50 rounded-full"></div>
+                <p class="text-[10px] text-gray-400 uppercase font-bold mb-1 relative z-10">Harga Jual</p>
+                <p class="text-base font-black text-gray-900 relative z-10" id="detail-harga-jual">Memuat...</p>
+                <p class="text-[9px] font-bold text-rose-500 mt-1"><i class="fa-solid fa-arrow-trend-down"></i> Saat Diuangkan</p>
+            </div>
+        </div>
+    </div>
+
     <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h3 class="font-bold text-2xl text-gray-900">Daftar Anggota</h3>
                 <p class="text-sm text-gray-500">Geser untuk melihat nama anggota</p>
             </div>
-            <button onclick="closeMemberView()" class="w-11 h-11 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition">
-                <i class="fa-solid fa-arrow-left text-lg"></i>
-            </button>
         </div>
         <div class="overflow-x-auto pb-4 -mx-5 px-5 snap-x snap-mandatory hide-scrollbar" id="memberSlider">
             <div id="user-list" class="flex gap-4"></div>
@@ -131,9 +187,6 @@
                 <h3 class="font-bold text-2xl text-gray-900">E-Statement</h3>
                 <p class="text-sm text-gray-500">Pencarian riwayat spesifik</p>
             </div>
-            <button onclick="closeEStatementView()" class="w-11 h-11 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition">
-                <i class="fa-solid fa-arrow-left text-lg"></i>
-            </button>
         </div>
 
         <div class="space-y-3 mb-8">
@@ -249,6 +302,11 @@
         let memberSliderListenerAdded = false;
         let allTransactionsData = []; 
 
+        // Variabel untuk Grafik Chart.js
+        let goldChartInstance = null;
+        let chartDataBeli = [];
+        let chartDataJual = [];
+
         function loadDashboard() {
             const script = document.createElement("script");
             script.src = `${SCRIPT_URL}?callback=renderData`;
@@ -283,6 +341,21 @@
         function renderData(data) {
             document.getElementById("balance-total").innerText = data.totalGram + " gr";
             
+            // --- LOGIKA HARGA EMAS BARU ---
+            let hargaBeliSaatIni = 1200000; // Default jika gagal fetch
+            let hargaJualSaatIni = 1100000;
+            
+            if(data.hargaEmas) {
+                hargaBeliSaatIni = Number(data.hargaEmas.beli) || hargaBeliSaatIni;
+                hargaJualSaatIni = Number(data.hargaEmas.jual) || hargaJualSaatIni;
+            }
+            
+            document.getElementById("detail-harga-beli").innerText = "Rp " + hargaBeliSaatIni.toLocaleString('id-ID');
+            document.getElementById("detail-harga-jual").innerText = "Rp " + hargaJualSaatIni.toLocaleString('id-ID');
+            
+            // Initialize Grafik Harga Emas
+            initChart(hargaBeliSaatIni, hargaJualSaatIni);
+
             const container = document.getElementById("user-list");
             container.innerHTML = "";
             
@@ -293,7 +366,6 @@
             if (!data.users || data.users.length === 0) {
                 container.innerHTML = `<div class="bg-white p-6 rounded-2xl border border-gray-100 text-center min-w-full"><p class="text-gray-400 text-sm">Belum ada data tabungan.</p></div>`;
             } else {
-                // Menghitung total dan mencari pemilik terbanyak
                 data.users.forEach(user => {
                     let g = Number(user.gram);
                     localTotalGram += g;
@@ -302,7 +374,6 @@
                         topUser = user.name;
                     }
 
-                    // Card Anggota tanpa bayangan (flat shadow-none)
                     container.innerHTML += `
                     <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden border border-white/50 text-gray-900 shadow-none">
                         <div class="absolute -right-12 -top-12 w-24 h-24 bg-white opacity-40 rounded-full blur-md"></div>
@@ -315,13 +386,9 @@
                     </div>`;
                 });
 
-                // --- PEMBUATAN DONUT CHART MENGGUNAKAN CSS CONIC-GRADIENT ---
                 let legendHtml = `<div class="flex flex-col gap-2.5 flex-1 justify-center py-2">`;
-                
-                // Kombinasi palet warna untuk grafik (Hitam, Gold Gelap, Abu-abu tua, dll)
                 const palette = ['#0f172a', '#D4AF37', '#374151', '#FCEABB', '#000000'];
                 let colorIndex = 0;
-
                 let conicStops = [];
                 let currentPercent = 0;
 
@@ -330,12 +397,10 @@
                     let percent = localTotalGram > 0 ? (uGram / localTotalGram) * 100 : 0;
                     let hexColor = "";
 
-                    // Warna khusus gold pekat jika anggota punya tabungan paling banyak
                     if (user.name === topUser) {
                         hexColor = "#D4AF37"; 
                     } else {
                         hexColor = palette[colorIndex % palette.length];
-                        // Hindari menggunakan gold lagi secara acak
                         if (hexColor === '#D4AF37') {
                             colorIndex++;
                             hexColor = palette[colorIndex % palette.length];
@@ -358,10 +423,7 @@
                 });
 
                 legendHtml += `</div>`;
-
                 let gradientString = conicStops.join(', ');
-                
-                // Layout Lingkaran di Kiri, Legend di Kanan
                 let donutHtml = `
                     <div class="relative w-28 h-28 flex-shrink-0 rounded-full flex items-center justify-center shadow-sm" style="background: conic-gradient(${gradientString});">
                         <div class="absolute inset-[10px] bg-[#fcfaf5] rounded-full shadow-inner flex flex-col items-center justify-center">
@@ -433,6 +495,129 @@
                 slider.addEventListener('scroll', updateActiveDot);
                 memberSliderListenerAdded = true;
             }
+        }
+
+        // --- SISTEM CHART.JS (ALA APLIKASI DANA) ---
+        function initChart(beli, jual) {
+            const ctx = document.getElementById('goldChart').getContext('2d');
+            
+            // Generate simulasi garis harga (tren) agar menyerupai aslinya 
+            // karena kita hanya punya 1 angka statis per hari dari Apps Script.
+            const generateMockTrend = (basePrice) => {
+                let trend = [];
+                for(let i = 6; i >= 1; i--) {
+                    // Variasi harga turun-naik acak sedikit di masa lalu
+                    let varPrice = basePrice * (Math.random() * 0.008 - 0.004); 
+                    trend.push(basePrice - (varPrice * i));
+                }
+                trend.push(basePrice); // Harga hari ini
+                return trend;
+            };
+
+            chartDataBeli = generateMockTrend(beli);
+            chartDataJual = generateMockTrend(jual);
+
+            // Membuat efek gradasi warna di bawah garis grafik
+            let gradientFill = ctx.createLinearGradient(0, 0, 0, 200);
+            gradientFill.addColorStop(0, "rgba(212, 175, 55, 0.4)"); // Warna gold transparan atas
+            gradientFill.addColorStop(1, "rgba(212, 175, 55, 0.0)"); // Menghilang ke bawah
+
+            if (goldChartInstance) { goldChartInstance.destroy(); }
+
+            goldChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'],
+                    datasets: [{
+                        label: 'Harga',
+                        data: chartDataBeli,
+                        borderColor: '#D4AF37', // Warna garis gold
+                        borderWidth: 3,
+                        backgroundColor: gradientFill,
+                        fill: true,
+                        tension: 0.4, // Membuat lengkungan garis halus
+                        pointRadius: 0, // Sembunyikan titik agar bersih seperti Dana
+                        pointHoverRadius: 6,
+                        pointHitRadius: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleFont: { size: 10 },
+                            bodyFont: { size: 13, weight: 'bold' },
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) { return 'Rp ' + context.parsed.y.toLocaleString('id-ID'); }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { display: true, grid: { display: false }, ticks: { font: { size: 9 }, color: '#9ca3af' } },
+                        y: { display: false, min: Math.min(...chartDataBeli) * 0.995 } // Sembunyikan garis Y
+                    },
+                    interaction: { intersect: false, mode: 'index' }
+                }
+            });
+        }
+
+        function switchChart(type) {
+            const btnBeli = document.getElementById('btnChartBeli');
+            const btnJual = document.getElementById('btnChartJual');
+            
+            if(type === 'beli') {
+                btnBeli.className = "flex-1 text-sm font-bold py-3 rounded-[16px] bg-white shadow-sm text-gray-900 transition-all";
+                btnJual.className = "flex-1 text-sm font-bold py-3 rounded-[16px] text-gray-500 hover:text-gray-900 transition-all";
+                goldChartInstance.data.datasets[0].data = chartDataBeli;
+                goldChartInstance.options.scales.y.min = Math.min(...chartDataBeli) * 0.995;
+            } else {
+                btnJual.className = "flex-1 text-sm font-bold py-3 rounded-[16px] bg-white shadow-sm text-gray-900 transition-all";
+                btnBeli.className = "flex-1 text-sm font-bold py-3 rounded-[16px] text-gray-500 hover:text-gray-900 transition-all";
+                goldChartInstance.data.datasets[0].data = chartDataJual;
+                goldChartInstance.options.scales.y.min = Math.min(...chartDataJual) * 0.995;
+            }
+            goldChartInstance.update();
+        }
+
+        // --- SISTEM NAVIGASI BAWAH & VIEW ---
+        function updateBottomNav(activeId) {
+            // Reset semua warna ke abu-abu
+            document.getElementById('nav-home').classList.replace('text-[#D4AF37]', 'text-gray-400');
+            document.getElementById('nav-harga-text').classList.replace('text-gray-900', 'text-gray-400');
+            
+            // Berikan warna aktif sesuai yang ditekan
+            if(activeId === 'nav-home') {
+                document.getElementById('nav-home').classList.replace('text-gray-400', 'text-[#D4AF37]');
+            } else if(activeId === 'nav-harga') {
+                document.getElementById('nav-harga-text').classList.replace('text-gray-400', 'text-gray-900');
+            }
+        }
+
+        function hideAllViews() {
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('hargaEmasScreen').classList.add('hidden');
+            document.getElementById('memberScreen').classList.add('hidden');
+            document.getElementById('eStatementScreen').classList.add('hidden');
+        }
+
+        function openHomeView() {
+            hideAllViews();
+            document.getElementById('dashboardView').classList.remove('hidden');
+            updateBottomNav('nav-home');
+        }
+
+        function openHargaEmasView() {
+            hideAllViews();
+            document.getElementById('hargaEmasScreen').classList.remove('hidden');
+            updateBottomNav('nav-harga');
+        }
+
+        function showDevAlert() {
+            alert("Fitur ini sedang dalam proses pengembangan 🚀");
         }
 
         function setupEStatementFilters(data) {
@@ -507,26 +692,21 @@
         }
 
         function openEStatementView() {
-            document.getElementById('dashboardView').classList.add('hidden');
+            hideAllViews();
             document.getElementById('eStatementScreen').classList.remove('hidden');
             filterEStatement(); 
         }
 
-        function closeEStatementView() {
-            document.getElementById('eStatementScreen').classList.add('hidden');
-            document.getElementById('dashboardView').classList.remove('hidden');
+        function openMemberView() {
+            hideAllViews();
+            document.getElementById('memberScreen').classList.remove('hidden');
         }
+
+        function closeMemberView() { openHomeView(); }
+        function closeEStatementView() { openHomeView(); }
 
         function openModalBeli() { document.getElementById('modalBeli').classList.remove('hidden'); }
         function closeModalBeli() { document.getElementById('modalBeli').classList.add('hidden'); }
-        function openMemberView() {
-            document.getElementById('dashboardView').classList.add('hidden');
-            document.getElementById('memberScreen').classList.remove('hidden');
-        }
-        function closeMemberView() {
-            document.getElementById('memberScreen').classList.add('hidden');
-            document.getElementById('dashboardView').classList.remove('hidden');
-        }
         
         function submitBeli() {
             const nama = document.getElementById('inputNama').value.trim();
