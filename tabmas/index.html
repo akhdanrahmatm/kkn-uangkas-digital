@@ -4,81 +4,341 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabungan Emas Kita</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        body { min-height: 100vh; background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 50%, #f9f6ea 100%); font-family: -apple-system, sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.3); }
-        .gold-premium-card { background: linear-gradient(135deg, #E6C27A 0%, #FCEABB 45%, #D4AF37 100%); }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        body { 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 50%, #f9f6ea 100%); 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; 
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05); 
+        }
+        .gold-premium-card { 
+            background: linear-gradient(135deg, #E6C27A 0%, #FCEABB 45%, #D4AF37 100%); 
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+        }
+        .text-gold { color: #d4af37; }
+        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(50px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
     </style>
 </head>
 <body>
 
     <div id="dashboardView" class="max-w-md mx-auto px-5 py-8">
+        
         <div class="mb-8 flex justify-between items-center">
-            <span class="inline-flex items-center px-4 py-2 rounded-full glass text-sm font-semibold text-gold">✨ Smart Gold Saving</span>
-        </div>
-        <div class="gold-premium-card rounded-[35px] px-6 pt-6 pb-8 mb-6 relative overflow-hidden shadow-2xl">
-            <p class="text-[#5C4308] text-sm font-semibold uppercase">Total Tabungan Emas</p>
-            <h2 id="balance-total" class="text-4xl font-bold text-gray-900 mt-2">Memuat...</h2>
+            <span class="inline-flex items-center px-4 py-2 rounded-full glass text-sm font-semibold text-gold">
+                ✨ Smart Gold Saving
+            </span>
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 relative">
+                <i class="fa-regular fa-bell text-gray-500"></i>
+            </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-2 mb-8">
-            <button onclick="openMemberView()" class="flex flex-col items-center justify-center gap-1 h-16 bg-white rounded-3xl shadow-sm border"><i class="fa-solid fa-users text-sm"></i><span class="text-[9px] uppercase">Anggota</span></button>
-            <button onclick="openModalBeli()" class="flex flex-col items-center justify-center gap-1 h-16 bg-white rounded-3xl shadow-sm border"><i class="fa-solid fa-plus text-sm"></i><span class="text-[9px] uppercase">Beli</span></button>
-            <button onclick="openModalJual()" class="flex flex-col items-center justify-center gap-1 h-16 bg-white rounded-3xl shadow-sm border"><i class="fa-solid fa-minus text-sm"></i><span class="text-[9px] uppercase">Jual</span></button>
-            <button onclick="openModalBulan()" class="flex flex-col items-center justify-center gap-1 h-16 bg-yellow-100 rounded-3xl border border-yellow-200"><i class="fa-solid fa-file-invoice text-sm"></i><span class="text-[9px] uppercase">Statement</span></button>
+        <div class="gold-premium-card rounded-[35px] px-6 pt-6 pb-8 mb-6 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-32 h-32 bg-white opacity-40 rounded-full blur-md"></div>
+            
+            <p class="text-[#5C4308] text-sm font-semibold relative z-10 uppercase tracking-wider">
+                Total Tabungan Emas
+            </p>
+            
+            <h2 id="balance-total" class="text-4xl font-bold text-gray-900 mt-2 relative z-10 drop-shadow-sm">
+                Memuat...
+            </h2>
+            
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/40 backdrop-blur-sm border border-white/60 mt-4 text-xs font-bold text-[#5C4308] relative z-10 shadow-sm">
+                🪙 Tabungan Emas Digital
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-8">
+            <button onclick="openMemberView()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-4 bg-gradient-to-br from-[#F9F5E1] via-white to-[#F3E2A9] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#92400e] shadow-sm">
+                    <i class="fa-solid fa-users text-sm"></i>
+                </div>
+                <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Anggota</span>
+            </button>
+
+            <button onclick="openModalBeli()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-4 bg-gradient-to-br from-white via-[#E5E7EB] to-[#D1D5DB] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#1f2937] shadow-sm">
+                    <i class="fa-solid fa-arrow-trend-up text-sm"></i>
+                </div>
+                <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Beli</span>
+            </button>
+
+            <button onclick="openModalJual()" class="group flex flex-col items-center justify-center gap-1 w-full h-16 px-4 bg-gradient-to-br from-[#FDE68A] via-[#FCD34D] to-[#FBBF24] rounded-full text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#D4AF37] shadow-sm">
+                    <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
+                </div>
+                <span class="font-semibold text-[9px] uppercase tracking-[0.18em]">Jual</span>
+            </button>
         </div>
 
         <div class="mt-2 mb-8">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 px-1 uppercase tracking-wider">TRANSAKSI TERAKHIR</h3>
-            <div id="transaction-list" class="space-y-3"></div>
+            <h3 class="text-sm font-bold text-gray-900 mb-4 px-1 uppercase tracking-wider">Riwayat 7 Hari</h3>
+            <div id="transaction-list" class="space-y-3">
+                <p class="text-xs text-gray-400 text-center py-4">Memuat riwayat...</p>
+            </div>
         </div>
     </div>
 
     <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="font-bold text-2xl text-gray-900">Daftar Anggota</h3>
-            <button onclick="closeMemberView()" class="w-11 h-11 rounded-full bg-white shadow-sm border"><i class="fa-solid fa-xmark"></i></button>
+            <div>
+                <h3 class="font-bold text-2xl text-gray-900">Daftar Anggota</h3>
+                <p class="text-sm text-gray-500">Geser untuk melihat nama anggota</p>
+            </div>
+            <button onclick="closeMemberView()" class="w-11 h-11 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition">
+                <i class="fa-solid fa-glasses text-lg"></i>
+            </button>
         </div>
-        <div class="overflow-x-auto pb-4 -mx-5 px-5 snap-x snap-mandatory hide-scrollbar flex gap-4" id="memberSlider">
+        <div class="overflow-x-auto pb-4 -mx-5 px-5 snap-x snap-mandatory hide-scrollbar" id="memberSlider">
             <div id="user-list" class="flex gap-4"></div>
+        </div>
+        <div id="memberDots" class="flex items-center justify-center gap-2 mt-2"></div>
+    </div>
+
+    <div id="modalBeli" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center pb-0 sm:p-4 transition-all duration-300">
+        <div class="bg-white w-full max-w-md rounded-t-[35px] sm:rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
+            <button onclick="closeModalBeli()" class="absolute top-6 right-6 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-gray-900 mb-1">Beli Emas</h3>
+            <p class="text-sm text-gray-500 mb-6">Tambahkan saldo gram untuk anggota baru atau lama.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Nama Anggota</label>
+                    <input type="text" id="inputNama" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-gray-900 transition-all" placeholder="Contoh: Budi">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Jenis Emas</label>
+                    <select id="inputJenis" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-gray-900 transition-all appearance-none">
+                        <option value="Antam">Antam</option>
+                        <option value="UBS">UBS</option>
+                        <option value="Galeri24">Galeri24</option>
+                        <option value="Lokal">Lokal</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Jumlah Beli</label>
+                    <div class="relative">
+                        <input type="number" step="0.0001" id="inputGram" class="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-5 pr-14 py-4 focus:outline-none focus:border-gray-900 transition-all" placeholder="0.0000">
+                        <span class="absolute right-5 top-4 text-gray-400 font-bold">gr</span>
+                    </div>
+                </div>
+                <button onclick="submitBeli()" id="btnSubmitBeli" class="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl mt-6 shadow-lg hover:bg-black transition-transform active:scale-95">
+                    Konfirmasi Pembelian
+                </button>
+            </div>
         </div>
     </div>
 
+    <div id="modalJual" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center pb-0 sm:p-4 transition-all duration-300">
+        <div class="bg-white w-full max-w-md rounded-t-[35px] sm:rounded-[30px] p-8 shadow-2xl relative animate-fade-in-up">
+            <button onclick="closeModalJual()" class="absolute top-6 right-6 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-gray-900 mb-1">Jual Emas</h3>
+            <p class="text-sm text-gray-500 mb-6">Pencatatan penarikan aset anggota.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Pilih Anggota</label>
+                    <select id="jualNama" onchange="updateJenisJual()" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-gray-900 transition-all appearance-none">
+                        <option value="">Memuat Anggota...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Pilih Jenis Emas</label>
+                    <select id="jualJenis" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-gray-900 transition-all appearance-none">
+                        <option value="">Pilih Jenis Emas</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1 uppercase">Jumlah Jual</label>
+                    <div class="relative">
+                        <input type="number" step="0.0001" id="jualGram" class="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-5 pr-14 py-4 focus:outline-none focus:border-gray-900 transition-all" placeholder="0.0000">
+                        <span class="absolute right-5 top-4 text-gray-400 font-bold">gr</span>
+                    </div>
+                </div>
+                <button onclick="submitJual()" id="btnSubmitJual" class="w-full bg-red-600 text-white font-bold py-4 rounded-2xl mt-6 shadow-lg hover:bg-red-700 transition-transform active:scale-95">
+                    Konfirmasi Penjualan
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
-        let memberData = {};
         
-        function loadDashboard() { const s = document.createElement("script"); s.src = `${SCRIPT_URL}?callback=renderData`; document.body.appendChild(s); }
+        let memberData = {};
+        let memberSliderListenerAdded = false;
+
+        function loadDashboard() {
+            const script = document.createElement("script");
+            script.src = `${SCRIPT_URL}?callback=renderData`;
+            document.body.appendChild(script);
+        }
+
         function renderData(data) {
             document.getElementById("balance-total").innerText = data.totalGram + " gr";
-            renderTransactionList((data.transactions || []).slice(0, 7), "Transaksi Terbaru");
-            const container = document.getElementById("user-list"); container.innerHTML = "";
-            data.users.forEach(u => container.innerHTML += `<div class="snap-start min-w-[280px] bg-gradient-to-br from-[#E6C27A] to-[#D4AF37] rounded-[35px] p-6 text-gray-900"><p class="text-xs font-semibold uppercase">Nama Anggota</p><p class="text-lg font-bold">${u.name}</p><h2 class="text-4xl font-bold mt-4">${Number(u.gram).toFixed(4)} gr</h2></div>`);
+            const container = document.getElementById("user-list");
+            container.innerHTML = "";
+            
+            if (!data.users || data.users.length === 0) {
+                container.innerHTML = `<div class="bg-white p-6 rounded-2xl border border-gray-100 text-center min-w-full"><p class="text-gray-400 text-sm">Belum ada data tabungan.</p></div>`;
+            } else {
+                data.users.forEach(user => {
+                    container.innerHTML += `
+                    <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden shadow-2xl border border-white/50 text-gray-900">
+                        <div class="absolute -right-12 -top-12 w-24 h-24 bg-white opacity-40 rounded-full blur-md"></div>
+                        <p class="text-[#5C4308] text-[10px] font-semibold uppercase tracking-[0.2em] relative z-10">Nama Anggota</p>
+                        <p class="text-base font-semibold mt-2 relative z-10 leading-tight text-gray-900">${user.name}</p>
+                        <h2 class="text-4xl font-bold mt-5 relative z-10 leading-tight">${Number(user.gram).toFixed(4)} gr</h2>
+                        <div class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/70 border border-white/80 mt-4 text-[11px] font-semibold text-[#5C4308] relative z-10 shadow-sm">
+                            <span>Saldo Gram</span>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            const transContainer = document.getElementById("transaction-list");
+            transContainer.innerHTML = "";
+            if (data.transactions && data.transactions.length > 0) {
+                data.transactions.forEach(t => {
+                    const isBeli = t.type === 'BELI';
+                    transContainer.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full ${isBeli ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} flex items-center justify-center">
+                                <i class="fa-solid ${isBeli ? 'fa-arrow-down' : 'fa-arrow-up'} text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-900">${t.name}</p>
+                                <p class="text-[9px] text-gray-400 uppercase">${t.gold} • ${t.date}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold ${isBeli ? 'text-emerald-600' : 'text-rose-600'}">
+                                ${isBeli ? '+' : '-'}${Number(t.gram).toFixed(4)} gr
+                            </p>
+                        </div>
+                    </div>`;
+                });
+            } else {
+                transContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Tidak ada transaksi baru.</p>`;
+            }
+
+            const slider = document.getElementById('memberSlider');
+            const dots = document.getElementById('memberDots');
+            dots.innerHTML = '';
+            data.users.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-gray-300';
+                dots.appendChild(dot);
+            });
+            const updateActiveDot = () => {
+                const scrollLeft = slider.scrollLeft;
+                const width = slider.clientWidth;
+                const active = Math.round(scrollLeft / width);
+                dots.querySelectorAll('span').forEach((dot, idx) => {
+                    dot.className = idx === active ? 'w-2.5 h-2.5 rounded-full bg-[#D4AF37]' : 'w-2.5 h-2.5 rounded-full bg-gray-300';
+                });
+            };
+            if (!memberSliderListenerAdded) {
+                slider.addEventListener('scroll', updateActiveDot);
+                memberSliderListenerAdded = true;
+            }
         }
-        function renderTransactionList(list, title) {
-            const container = document.getElementById("transaction-list");
-            container.innerHTML = `<h4 class="text-[10px] text-gray-400 mb-2 uppercase">${title}</h4>`;
-            list.forEach(t => { const isBeli = t.type === 'BELI'; container.innerHTML += `<div class="bg-white p-4 rounded-2xl border flex items-center justify-between shadow-sm"><div><p class="text-xs font-bold">${t.name}</p><p class="text-[9px] text-gray-400">${t.gold} • ${t.date}</p></div><p class="text-xs font-bold ${isBeli ? 'text-emerald-600' : 'text-rose-600'}">${isBeli ? '+' : '-'}${Number(t.gram).toFixed(4)} gr</p></div>`; });
-        }
-        function openMemberView() { document.getElementById('dashboardView').classList.add('hidden'); document.getElementById('memberScreen').classList.remove('hidden'); }
-        function closeMemberView() { document.getElementById('memberScreen').classList.add('hidden'); document.getElementById('dashboardView').classList.remove('hidden'); }
-        // ... (Fungsi Modal Beli, Jual, Statement, Submit sama seperti sebelumnya)
+
         function openModalBeli() { document.getElementById('modalBeli').classList.remove('hidden'); }
         function closeModalBeli() { document.getElementById('modalBeli').classList.add('hidden'); }
-        function openModalJual() { document.getElementById('modalJual').classList.remove('hidden'); const s = document.createElement("script"); s.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`; document.body.appendChild(s); }
+        function openMemberView() {
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('memberScreen').classList.remove('hidden');
+        }
+        function closeMemberView() {
+            document.getElementById('memberScreen').classList.add('hidden');
+            document.getElementById('dashboardView').classList.remove('hidden');
+        }
+        function submitBeli() {
+            const nama = document.getElementById('inputNama').value.trim();
+            const jenis = document.getElementById('inputJenis').value;
+            const gram = document.getElementById('inputGram').value;
+            const btn = document.getElementById('btnSubmitBeli');
+            if(!nama || !gram) return alert("Mohon isi Nama Anggota dan Jumlah Gram!");
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+            btn.disabled = true;
+            const script = document.createElement("script");
+            script.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+            document.body.appendChild(script);
+        }
+        function openModalJual() {
+            document.getElementById('modalJual').classList.remove('hidden');
+            const script = document.createElement("script");
+            script.src = `${SCRIPT_URL}?action=getMembers&callback=initJual`;
+            document.body.appendChild(script);
+        }
         function closeModalJual() { document.getElementById('modalJual').classList.add('hidden'); }
-        function initJual(data) { memberData = data; const select = document.getElementById('jualNama'); select.innerHTML = '<option value="">Pilih Anggota</option>'; Object.keys(data).forEach(n => select.innerHTML += `<option value="${n}">${n}</option>`); }
-        function updateJenisJual() { const n = document.getElementById('jualNama').value; const s = document.getElementById('jualJenis'); s.innerHTML = '<option value="">Pilih Jenis</option>'; if(memberData[n]) Object.keys(memberData[n]).forEach(j => s.innerHTML += `<option value="${j}">${j}</option>`); }
-        function submitBeli() { const n = document.getElementById('inputNama').value, j = document.getElementById('inputJenis').value, g = document.getElementById('inputGram').value; const s = document.createElement("script"); s.src = `${SCRIPT_URL}?action=addBalance&name=${encodeURIComponent(n)}&jenis=${encodeURIComponent(j)}&gram=${encodeURIComponent(g)}&callback=onSuccessSubmit`; document.body.appendChild(s); }
-        function submitJual() { const n = document.getElementById('jualNama').value, j = document.getElementById('jualJenis').value, g = document.getElementById('jualGram').value; const s = document.createElement("script"); s.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(n)}&jenis=${encodeURIComponent(j)}&gram=${encodeURIComponent(g)}&callback=onSuccessSubmit`; document.body.appendChild(s); }
-        function openModalBulan() { document.getElementById('modalBulan').classList.remove('hidden'); }
-        function loadMonthly(m) { const s = document.createElement("script"); s.src = `${SCRIPT_URL}?action=getMonthlyTransactions&month=${m}&callback=showFullTrans`; document.body.appendChild(s); }
-        function showFullTrans(data) { renderTransactionList(data, "Semua Transaksi"); document.getElementById('modalBulan').classList.add('hidden'); }
-        function onSuccessSubmit() { alert("Berhasil!"); location.reload(); }
+        function initJual(data) {
+            memberData = data; 
+            const select = document.getElementById('jualNama');
+            select.innerHTML = '<option value="">Pilih Anggota</option>';
+            Object.keys(data).forEach(name => {
+                select.innerHTML += `<option value="${name}">${name}</option>`;
+            });
+        }
+        function updateJenisJual() {
+            const nama = document.getElementById('jualNama').value;
+            const selectJenis = document.getElementById('jualJenis');
+            selectJenis.innerHTML = '<option value="">Pilih Jenis Emas</option>';
+            if (memberData[nama]) {
+                Object.keys(memberData[nama]).forEach(jenis => {
+                    const saldoJenis = memberData[nama][jenis];
+                    if (saldoJenis > 0) { 
+                        selectJenis.innerHTML += `<option value="${jenis}">${jenis} (Sisa: ${saldoJenis.toFixed(4)} gr)</option>`;
+                    }
+                });
+            }
+        }
+        function submitJual() {
+            const nama = document.getElementById('jualNama').value;
+            const jenis = document.getElementById('jualJenis').value;
+            const gram = document.getElementById('jualGram').value;
+            const btn = document.getElementById('btnSubmitJual');
+            if(!nama || !jenis || !gram) return alert("Mohon lengkapi pilihan Anggota, Jenis Emas, dan Jumlah Jual!");
+            if(Number(gram) > memberData[nama][jenis]) return alert(`Saldo tidak cukup! Maksimal: ${memberData[nama][jenis]} gr.`);
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+            btn.disabled = true;
+            const script = document.createElement("script");
+            script.src = `${SCRIPT_URL}?action=sellBalance&name=${encodeURIComponent(nama)}&jenis=${encodeURIComponent(jenis)}&gram=${encodeURIComponent(gram)}&callback=onSuccessSubmit`;
+            document.body.appendChild(script);
+        }
+        function onSuccessSubmit() {
+            alert("Transaksi Berhasil Dicatat!");
+            location.reload(); 
+        }
         window.onload = loadDashboard;
     </script>
 </body>
