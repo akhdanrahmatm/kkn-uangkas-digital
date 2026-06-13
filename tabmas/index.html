@@ -117,7 +117,6 @@
                 <i class="fa-solid fa-arrow-left text-lg"></i>
             </button>
         </div>
-        
         <div class="overflow-x-auto pb-4 -mx-5 px-5 snap-x snap-mandatory hide-scrollbar" id="memberSlider">
             <div id="user-list" class="flex gap-4"></div>
         </div>
@@ -287,7 +286,6 @@
             const container = document.getElementById("user-list");
             container.innerHTML = "";
             
-            // Variabel untuk menghitung persentase bar chart
             let localTotalGram = 0;
             let maxGram = 0;
             let topUser = "";
@@ -295,7 +293,7 @@
             if (!data.users || data.users.length === 0) {
                 container.innerHTML = `<div class="bg-white p-6 rounded-2xl border border-gray-100 text-center min-w-full"><p class="text-gray-400 text-sm">Belum ada data tabungan.</p></div>`;
             } else {
-                // Menghitung total dan mencari pemilik terbanyak untuk visual bar
+                // Menghitung total dan mencari pemilik terbanyak
                 data.users.forEach(user => {
                     let g = Number(user.gram);
                     localTotalGram += g;
@@ -304,7 +302,7 @@
                         topUser = user.name;
                     }
 
-                    // PERUBAHAN: Dihapus shadow-2xl agar flat, tetapi desain cardless tetap ada
+                    // Card Anggota tanpa bayangan (flat shadow-none)
                     container.innerHTML += `
                     <div class="snap-start min-w-full bg-gradient-to-br from-[#E6C27A] via-[#FCEABB] to-[#D4AF37] rounded-[35px] p-5 relative overflow-hidden border border-white/50 text-gray-900 shadow-none">
                         <div class="absolute -right-12 -top-12 w-24 h-24 bg-white opacity-40 rounded-full blur-md"></div>
@@ -317,46 +315,68 @@
                     </div>`;
                 });
 
-                // PERUBAHAN: Menyusun Bar Proporsi Kepemilikan Emas
-                let stackedBarHtml = `<div class="flex w-full h-3 rounded-full overflow-hidden bg-gray-100 mt-2">`;
-                let legendHtml = `<div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 justify-start px-1">`;
+                // --- PEMBUATAN DONUT CHART MENGGUNAKAN CSS CONIC-GRADIENT ---
+                let legendHtml = `<div class="flex flex-col gap-2.5 flex-1 justify-center py-2">`;
                 
-                // Kombinasi palet warna selain pemenang pertama (Hitam, Gold, Abu-abu tua)
-                const palette = ['bg-gray-900', 'bg-[#E6C27A]', 'bg-gray-700', 'bg-[#FCEABB]', 'bg-black'];
+                // Kombinasi palet warna untuk grafik (Hitam, Gold Gelap, Abu-abu tua, dll)
+                const palette = ['#0f172a', '#D4AF37', '#374151', '#FCEABB', '#000000'];
                 let colorIndex = 0;
+
+                let conicStops = [];
+                let currentPercent = 0;
 
                 data.users.forEach(user => {
                     let uGram = Number(user.gram);
                     let percent = localTotalGram > 0 ? (uGram / localTotalGram) * 100 : 0;
-                    let bgColor = "";
+                    let hexColor = "";
 
                     // Warna khusus gold pekat jika anggota punya tabungan paling banyak
                     if (user.name === topUser) {
-                        bgColor = "bg-[#D4AF37]"; 
+                        hexColor = "#D4AF37"; 
                     } else {
-                        // Warnanya selang-seling untuk anggota lainnya
-                        bgColor = palette[colorIndex % palette.length];
+                        hexColor = palette[colorIndex % palette.length];
+                        // Hindari menggunakan gold lagi secara acak
+                        if (hexColor === '#D4AF37') {
+                            colorIndex++;
+                            hexColor = palette[colorIndex % palette.length];
+                        }
                         colorIndex++;
                     }
 
                     if (percent > 0) {
-                        stackedBarHtml += `<div class="${bgColor} h-full transition-all duration-500" style="width: ${percent}%"></div>`;
+                        let nextPercent = currentPercent + percent;
+                        conicStops.push(`${hexColor} ${currentPercent}% ${nextPercent}%`);
+                        currentPercent = nextPercent;
                     }
+
                     legendHtml += `
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 rounded-full ${bgColor}"></div>
-                            <span class="text-[10px] font-semibold text-gray-600">${user.name} <span class="text-gray-400">(${percent.toFixed(1)}%)</span></span>
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${hexColor};"></div>
+                            <span class="text-[10px] font-bold text-gray-700 leading-tight">${user.name} <span class="text-gray-400 font-semibold text-[9px] block sm:inline">(${percent.toFixed(1)}%)</span></span>
                         </div>
                     `;
                 });
 
-                stackedBarHtml += `</div>`;
                 legendHtml += `</div>`;
 
+                let gradientString = conicStops.join(', ');
+                
+                // Layout Lingkaran di Kiri, Legend di Kanan
+                let donutHtml = `
+                    <div class="relative w-28 h-28 flex-shrink-0 rounded-full flex items-center justify-center shadow-sm" style="background: conic-gradient(${gradientString});">
+                        <div class="absolute inset-[10px] bg-[#fcfaf5] rounded-full shadow-inner flex flex-col items-center justify-center">
+                            <span class="text-[8px] text-gray-400 font-bold uppercase tracking-wider">Total</span>
+                            <span class="text-[11px] font-bold text-[#D4AF37]">${localTotalGram.toFixed(1)}g</span>
+                        </div>
+                    </div>
+                `;
+
                 document.getElementById('memberStats').innerHTML = `
-                    <h4 class="text-xs font-bold text-gray-900 mb-1 uppercase tracking-wider px-1">Porsi Kepemilikan Emas</h4>
-                    ${stackedBarHtml}
-                    ${legendHtml}
+                    <h4 class="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wider px-1">Porsi Kepemilikan Emas</h4>
+                    <div class="flex items-center gap-5 bg-white/70 backdrop-blur-sm p-4 rounded-[28px] border border-white/60 shadow-sm">
+                        ${donutHtml}
+                        ${legendHtml}
+                    </div>
                 `;
             }
 
