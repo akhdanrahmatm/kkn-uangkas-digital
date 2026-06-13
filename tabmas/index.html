@@ -11,81 +11,92 @@
     <style>
         body { 
             min-height: 100vh; 
-            background: #F8F9FA; /* Warna background abu-abu sangat muda yang bersih */
+            background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 50%, #f9f6ea 100%); 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; 
         }
+        .glass { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05); 
+        }
+        .gold-premium-card { 
+            background: linear-gradient(135deg, #E6C27A 0%, #FCEABB 45%, #D4AF37 100%); 
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+        }
         .text-gold { color: #d4af37; }
-        .bg-gold { background-color: #d4af37; }
-        .border-gold { border-color: #d4af37; }
         .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
         @keyframes fadeInUp { 
-            from { opacity: 0; transform: translateY(30px); } 
+            from { opacity: 0; transform: translateY(50px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
-        /* Style scrollbar tipis untuk user list */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="max-w-md mx-auto px-5 py-8">
+    <div id="dashboardView" class="max-w-md mx-auto px-5 py-8">
         
-        <div class="mb-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Tabungan Emas</h1>
-                <p class="text-sm text-gray-500">Kelola aset digital Anda</p>
-            </div>
+        <div class="mb-8 flex justify-between items-center">
+            <span class="inline-flex items-center px-4 py-2 rounded-full glass text-sm font-semibold text-gold">
+                ✨ Smart Gold Saving
+            </span>
             <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 relative">
-                <i class="fa-regular fa-bell text-gray-600"></i>
-                <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                <i class="fa-regular fa-bell text-gray-500"></i>
             </div>
         </div>
 
-        <div class="bg-white rounded-[28px] p-7 mb-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br from-[#E6C27A] to-[#D4AF37] opacity-[0.08] rounded-full blur-2xl pointer-events-none"></div>
+        <div class="gold-premium-card rounded-[35px] px-6 pt-6 pb-8 mb-6 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-32 h-32 bg-white opacity-40 rounded-full blur-md"></div>
             
-            <div class="flex items-center gap-2 mb-3 relative z-10">
-                <div class="w-8 h-8 rounded-full bg-yellow-50 flex items-center justify-center text-[#d4af37]">
-                    <i class="fa-solid fa-wallet text-sm"></i>
-                </div>
-                <p class="text-gray-500 text-sm font-medium">Total Saldo Grup</p>
-            </div>
+            <p class="text-[#5C4308] text-sm font-semibold relative z-10 uppercase tracking-wider">
+                Total Tabungan Emas
+            </p>
             
-            <h2 id="balance-total" class="text-4xl font-extrabold text-gray-900 tracking-tight relative z-10">
-                <span class="animate-pulse text-gray-300">Memuat...</span>
+            <h2 id="balance-total" class="text-4xl font-bold text-gray-900 mt-2 relative z-10 drop-shadow-sm">
+                Memuat...
             </h2>
             
-            <div class="mt-4 flex items-center gap-2 relative z-10">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-50 text-green-600 text-xs font-semibold">
-                    <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> Live Update
-                </span>
-                <span class="text-xs text-gray-400 font-medium">Terhubung ke Database</span>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/40 backdrop-blur-sm border border-white/60 mt-4 text-xs font-bold text-[#5C4308] relative z-10 shadow-sm">
+                🪙 Tabungan Emas Digital
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <button onclick="openModalBeli()" class="group flex flex-col items-center justify-center p-4 bg-gray-900 rounded-[24px] text-white shadow-lg shadow-gray-900/20 transition-all hover:-translate-y-1 active:scale-95">
-                <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-3 group-hover:bg-white/20 transition-colors">
-                    <i class="fa-solid fa-arrow-trend-up text-xl text-[#E6C27A]"></i>
+        <div class="grid grid-cols-3 gap-3 mb-8">
+            <button onclick="openModalJual()" class="group flex flex-col items-center justify-center gap-2 p-3 bg-white border border-gray-200 rounded-[24px] text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-[#D4AF37]">
+                    <i class="fa-solid fa-hand-holding-dollar text-lg"></i>
                 </div>
-                <span class="font-bold text-sm tracking-wide">Beli Emas</span>
+                <span class="font-semibold text-[11px] uppercase tracking-[0.18em]">Jual</span>
             </button>
             
-            <button onclick="openModalJual()" class="group flex flex-col items-center justify-center p-4 bg-white border-2 border-transparent shadow-[0_4px_20px_rgb(0,0,0,0.03)] rounded-[24px] text-gray-800 transition-all hover:border-[#D4AF37]/30 hover:-translate-y-1 active:scale-95">
-                <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-yellow-50 transition-colors">
-                    <i class="fa-solid fa-hand-holding-dollar text-xl text-[#D4AF37]"></i>
+            <button onclick="openModalBeli()" class="group flex flex-col items-center justify-center gap-2 p-3 bg-white border border-gray-200 rounded-[24px] text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-[#1f2937]">
+                    <i class="fa-solid fa-arrow-trend-up text-lg"></i>
                 </div>
-                <span class="font-bold text-sm tracking-wide">Jual Emas</span>
+                <span class="font-semibold text-[11px] uppercase tracking-[0.18em]">Beli</span>
+            </button>
+
+            <button onclick="openMemberView()" class="group flex flex-col items-center justify-center gap-2 p-3 bg-white border border-gray-200 rounded-[24px] text-gray-800 shadow-sm hover:shadow-md transition-all duration-200">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-[#92400e]">
+                    <i class="fa-solid fa-users text-lg"></i>
+                </div>
+                <span class="font-semibold text-[11px] uppercase tracking-[0.18em]">Anggota</span>
             </button>
         </div>
+    </div>
 
-        <div class="flex justify-between items-center mb-4 px-1">
-            <h3 class="font-bold text-gray-800 text-lg">Daftar Anggota</h3>
-            <span class="text-xs font-semibold text-[#d4af37] bg-yellow-50 px-3 py-1 rounded-full">Real-time</span>
+    <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="font-bold text-2xl text-gray-900">Daftar Anggota</h3>
+                <p class="text-sm text-gray-500">Daftar pemilik emas</p>
+            </div>
+            <button onclick="closeMemberView()" class="w-11 h-11 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition">
+                <i class="fa-solid fa-glasses text-lg"></i>
+            </button>
         </div>
-        <div id="user-list" class="space-y-3 pb-10"></div>
+        <div id="user-list" class="space-y-3"></div>
     </div>
 
 
@@ -164,7 +175,7 @@
 
 
     <script>
-        // URL SCRIPT ANDA (Tetap sesuai dengan yang terakhir di HTML Anda)
+        // PASTIKAN URL INI SESUAI DENGAN DEPLOY TERBARU ANDA
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVqzxORjyzdiKMlnhaThqJGsmqyErUd0dShzqieKVJglJb4XPPuygAByxwdO1cp-1sPg/exec";
         
         // Simpan data anggota untuk dropdown Jual
@@ -221,6 +232,17 @@
             document.getElementById('modalBeli').classList.add('hidden');
             document.getElementById('inputNama').value = "";
             document.getElementById('inputGram').value = "";
+        }
+
+        function openMemberView() {
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('memberScreen').classList.remove('hidden');
+            loadDashboard();
+        }
+
+        function closeMemberView() {
+            document.getElementById('memberScreen').classList.add('hidden');
+            document.getElementById('dashboardView').classList.remove('hidden');
         }
 
         function submitBeli() {
