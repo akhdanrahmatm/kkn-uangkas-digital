@@ -34,10 +34,16 @@
 
         <div class="mt-2 mb-8">
             <h3 class="text-sm font-bold text-gray-900 mb-4 px-1 uppercase tracking-wider">TRANSAKSI TERAKHIR</h3>
-            <div id="transaction-list" class="space-y-3">
-                <p class="text-xs text-gray-400 text-center py-4">Memuat transaksi...</p>
-            </div>
+            <div id="transaction-list" class="space-y-3"></div>
         </div>
+    </div>
+
+    <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-bold text-2xl text-gray-900">Daftar Anggota</h3>
+            <button onclick="closeMemberView()" class="w-11 h-11 rounded-full bg-white shadow-sm border flex items-center justify-center text-gray-700"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="user-list" class="flex flex-col gap-4"></div>
     </div>
 
     <div id="modalBulan" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
@@ -52,16 +58,8 @@
         </div>
     </div>
 
-    <div id="memberScreen" class="max-w-md mx-auto px-5 py-8 hidden">
-        <div class="flex items-center justify-between mb-6">
-            <div><h3 class="font-bold text-2xl text-gray-900">Daftar Anggota</h3></div>
-            <button onclick="closeMemberView()" class="w-11 h-11 rounded-full bg-white shadow-sm border flex items-center justify-center text-gray-700"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="user-list" class="flex flex-col gap-4"></div>
-    </div>
-
     <div id="modalBeli" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[30px] p-8 shadow-2xl relative"><button onclick="closeModalBeli()" class="absolute top-6 right-6 text-gray-500"><i class="fa-solid fa-xmark"></i></button><h3 class="text-2xl font-bold mb-6">Beli Emas</h3><div class="space-y-4"><input type="text" id="inputNama" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Nama"><select id="inputJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4"><option>Antam</option><option>UBS</option></select><input type="number" id="inputGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Gram"><button onclick="submitBeli()" id="btnSubmitBeli" class="w-full bg-gray-900 text-white py-4 rounded-2xl">Konfirmasi</button></div></div>
+        <div class="bg-white w-full max-w-md rounded-[30px] p-8 shadow-2xl relative"><button onclick="closeModalBeli()" class="absolute top-6 right-6 text-gray-500"><i class="fa-solid fa-xmark"></i></button><h3 class="text-2xl font-bold mb-6">Beli Emas</h3><div class="space-y-4"><input type="text" id="inputNama" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Nama"><select id="inputJenis" class="w-full bg-gray-50 border rounded-2xl px-5 py-4"><option>Antam</option><option>UBS</option><option>Galeri24</option><option>Lokal</option></select><input type="number" id="inputGram" class="w-full bg-gray-50 border rounded-2xl px-5 py-4" placeholder="Gram"><button onclick="submitBeli()" id="btnSubmitBeli" class="w-full bg-gray-900 text-white py-4 rounded-2xl">Konfirmasi</button></div></div>
     </div>
 
     <div id="modalJual" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
@@ -73,7 +71,16 @@
         let memberData = {};
         
         function loadDashboard() { const s = document.createElement("script"); s.src = `${SCRIPT_URL}?callback=renderData`; document.body.appendChild(s); }
-        function renderData(data) { document.getElementById("balance-total").innerText = data.totalGram + " gr"; renderTransactionList((data.transactions || []).slice(0, 7), "Transaksi Terbaru"); }
+        function renderData(data) {
+            document.getElementById("balance-total").innerText = data.totalGram + " gr";
+            renderTransactionList((data.transactions || []).slice(0, 7), "Transaksi Terbaru");
+            renderUserList(data.users);
+        }
+        function renderUserList(users) {
+            const container = document.getElementById("user-list");
+            container.innerHTML = "";
+            users.forEach(u => container.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm flex justify-between items-center"><div class="font-bold">${u.name}</div><div class="text-yellow-600 font-bold">${u.gram} gr</div></div>`);
+        }
         function renderTransactionList(list, title) {
             const container = document.getElementById("transaction-list");
             container.innerHTML = `<h4 class="text-[10px] text-gray-400 mb-2 uppercase">${title}</h4>`;
